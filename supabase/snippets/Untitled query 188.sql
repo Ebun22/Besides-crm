@@ -1,0 +1,1 @@
+ALTER TABLE legal_rep__details ALTER COLUMN id SET DEFAULT gen_random_uuid();
