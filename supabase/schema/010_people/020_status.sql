@@ -42,3 +42,13 @@ TO
 USING (
   true
 );
+
+-- SEED
+INSERT INTO "public"."people__status" (
+  "name",
+  "description"
+)
+VALUES
+  (DRAFT, NULL),
+  (APPROVED, NULL);
+  
