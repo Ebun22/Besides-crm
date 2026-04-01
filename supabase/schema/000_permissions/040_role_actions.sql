@@ -13,11 +13,8 @@ ALTER TABLE "public"."permission__role_actions" ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Enable read access for all users" ON "public"."permission__role_actions" FOR SELECT TO "authenticated" USING (true);
 
 -- CLS
-GRANT
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
+REVOKE
+  ALL
 ON TABLE
   "public"."permission__role_actions"
 TO

@@ -7,20 +7,12 @@ CREATE TABLE IF NOT EXISTS "public"."people__types" (
 
 ALTER TABLE "public"."people__types" ENABLE ROW LEVEL SECURITY;
 
--- RLS
-ALTER TABLE "public"."people__types" ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Enable read access for all users" ON "public"."people__types" FOR SELECT TO "authenticated" USING (true);
-
 -- CLS
-GRANT
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
+REVOKE
+  ALL
 ON TABLE
   "public"."people__types"
-TO
+FROM
   "anon";
 
 GRANT
@@ -40,6 +32,20 @@ ON TABLE
   "public"."people__types"
 TO
   "service_role";
+
+-- RLS
+ALTER TABLE "public"."people__types" ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY
+  "Enable read access for all users"
+ON
+  "public"."people__types"
+FOR SELECT
+TO
+  "authenticated"
+USING (
+  true
+);
 
 -- SEED
 INSERT INTO "public"."people__types" (

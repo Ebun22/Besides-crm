@@ -8,11 +8,8 @@ CREATE TABLE IF NOT EXISTS "public"."permission__user_roles" (
 ALTER TABLE "public"."permission__user_roles" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
-GRANT
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
+REVOKE
+  ALL
 ON TABLE
   "public"."permission__user_roles"
 TO

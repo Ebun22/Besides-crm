@@ -8,11 +8,8 @@ CREATE TABLE IF NOT EXISTS "public"."permission__actions" (
 ALTER TABLE "public"."permission__actions" OWNER TO "postgres";
 
 -- CLS
-GRANT
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
+REVOKE
+  ALL
 ON TABLE
   "public"."permission__actions"
 TO
