@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS "public"."company__leg_ref" (
 );
 
 
-ALTER TABLE "public"."company__leg_ref" OWNER TO "postgres";
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."company__type" (
@@ -95,14 +95,14 @@ CREATE TABLE IF NOT EXISTS "public"."company__type" (
 ALTER TABLE "public"."company__type" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."customer__company" (
+
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "cust_ref" "uuid" NOT NULL,
     "comp_ref" "uuid" NOT NULL
 );
 
 
-ALTER TABLE "public"."customer__company" OWNER TO "postgres";
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."customer__details" (
@@ -458,15 +458,15 @@ ALTER TABLE ONLY "public"."legal_rep__details"
 
 
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."company__details" FOR INSERT TO "authenticated" WITH CHECK (true);
 
 
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."company__leg_ref" FOR INSERT TO "authenticated" WITH CHECK (true);
 
 
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."customer__company" FOR INSERT TO "authenticated" WITH CHECK (true);
+
+
+
 
 
 
@@ -498,19 +498,12 @@ CREATE POLICY "Enable insert for authenticated users only" ON "public"."supply__
 
 
 
-CREATE POLICY "Enable read access for all users" ON "public"."company__details" FOR SELECT TO "authenticated" USING (true);
 
 
 
-CREATE POLICY "Enable read access for all users" ON "public"."company__leg_ref" FOR SELECT TO "authenticated" USING (true);
 
 
 
-CREATE POLICY "Enable read access for all users" ON "public"."company__type" FOR SELECT TO "authenticated" USING (true);
-
-
-
-CREATE POLICY "Enable read access for all users" ON "public"."customer__company" FOR SELECT TO "authenticated" USING (true);
 
 
 
@@ -574,16 +567,16 @@ CREATE POLICY "Enable read access for all users" ON "public"."supply__details" F
 
 
 
-ALTER TABLE "public"."company__details" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."company__leg_ref" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."company__type" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."customer__company" ENABLE ROW LEVEL SECURITY;
+
+
+
+
 
 
 ALTER TABLE "public"."customer__details" ENABLE ROW LEVEL SECURITY;
@@ -622,7 +615,7 @@ ALTER TABLE "public"."permission__roles" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."supply__details" ENABLE ROW LEVEL SECURITY;
 
 
-CREATE POLICY "update policy" ON "public"."company__leg_ref" FOR UPDATE TO "authenticated" USING (true);
+
 
 
 
@@ -635,7 +628,7 @@ ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."company__details"
 
 
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."customer__company";
+
 
 
 
@@ -824,27 +817,12 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."company__details" TO "anon";
-GRANT ALL ON TABLE "public"."company__details" TO "authenticated";
-GRANT ALL ON TABLE "public"."company__details" TO "service_role";
 
 
 
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."company__leg_ref" TO "anon";
-GRANT ALL ON TABLE "public"."company__leg_ref" TO "authenticated";
-GRANT ALL ON TABLE "public"."company__leg_ref" TO "service_role";
 
 
 
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."company__type" TO "anon";
-GRANT SELECT,REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."company__type" TO "authenticated";
-GRANT ALL ON TABLE "public"."company__type" TO "service_role";
-
-
-
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."customer__company" TO "anon";
-GRANT ALL ON TABLE "public"."customer__company" TO "authenticated";
-GRANT ALL ON TABLE "public"."customer__company" TO "service_role";
 
 
 
