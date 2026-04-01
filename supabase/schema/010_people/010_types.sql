@@ -40,3 +40,12 @@ ON TABLE
   "public"."people__types"
 TO
   "service_role";
+
+-- SEED
+INSERT INTO "public"."people__types" (
+  "name",
+  "description"
+)
+VALUES
+  (CUSTOMER, NULL),
+  (LEGAL_REP, NULL);
