@@ -5,19 +5,16 @@ CREATE TABLE IF NOT EXISTS "public"."permission__role_actions" (
   CONSTRAINT permission__role_actions_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "public"."permission__role_actions" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."permission__role_actions" OWNER TO "postgres";
 
--- RLS
 ALTER TABLE "public"."permission__role_actions" ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Enable read access for all users" ON "public"."permission__role_actions" FOR SELECT TO "authenticated" USING (true);
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
   "public"."permission__role_actions"
-TO
+FROM
   "anon";
 
 GRANT
@@ -37,3 +34,15 @@ ON TABLE
   "public"."permission__role_actions"
 TO
   "service_role";
+
+-- RLS
+CREATE POLICY
+  "Enable read access for all users"
+ON
+  "public"."permission__role_actions"
+FOR SELECT
+TO
+  "authenticated"
+USING (
+  true
+);
