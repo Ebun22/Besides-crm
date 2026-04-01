@@ -566,7 +566,7 @@ CREATE POLICY "Enable read access for all users" ON "public"."permission__roles"
 
 
 
-CREATE POLICY "Enable read access for all users" ON "public"."permission__user_roles" FOR SELECT TO "authenticated" USING (true);
+
 
 
 
@@ -616,16 +616,7 @@ ALTER TABLE "public"."legal_rep__details" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."payment__types" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."permission__actions" ENABLE ROW LEVEL SECURITY;
-
-
-ALTER TABLE "public"."permission__role_actions" ENABLE ROW LEVEL SECURITY;
-
-
 ALTER TABLE "public"."permission__roles" ENABLE ROW LEVEL SECURITY;
-
-
-ALTER TABLE "public"."permission__user_roles" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."supply__details" ENABLE ROW LEVEL SECURITY;
