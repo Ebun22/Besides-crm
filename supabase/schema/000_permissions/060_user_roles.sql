@@ -12,7 +12,7 @@ REVOKE
   ALL
 ON TABLE
   "public"."permission__user_roles"
-TO
+FROM
   "anon";
 
 GRANT

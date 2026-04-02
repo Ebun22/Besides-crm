@@ -1,13 +1,20 @@
-create table public.customer__payment (
-  id uuid not null default gen_random_uuid (),
-  cust_ref uuid null default gen_random_uuid (),
-  pay_type uuid null,
-  cc_cognome text null,
-  cc_nome text null,
-  pag_codfisc text null,
-  cc_tit_birth_place text null,
-  cc_tit_birth_date bigint null,
-  cc_tit_sex character varying null,
-  constraint payment_details_pkey primary key (id),
-  constraint customer__payment_pay_type_fkey foreign KEY (pay_type) references payment__types (id) on update CASCADE on delete CASCADE
-) TABLESPACE pg_default;
+CREATE TABLE IF NOT EXISTS "public"."customer__payment" (
+  "id"                 uuid NOT NULL DEFAULT gen_random_uuid (),
+  "cust_ref"           uuid     NULL DEFAULT gen_random_uuid (),
+  "pay_type"           uuid     NULL,
+  "cc_cognome"         text     NULL,
+  "cc_nome"            text     NULL,
+  "pag_codfisc"        text     NULL,
+  "cc_tit_birth_place" text     NULL,
+  "cc_tit_birth_date"  bigint   NULL,
+  "cc_tit_sex"         varchar  NULL,
+  CONSTRAINT payment_details_pkey            PRIMARY KEY ("id"),
+  CONSTRAINT payment__details_customer_fkey  FOREIGN KEY ("cust_ref")
+    REFERENCES people__details ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT payment__details_pay_type_fkey FOREIGN KEY ("pay_type")
+    REFERENCES payment__types ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);

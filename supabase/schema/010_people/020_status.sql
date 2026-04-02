@@ -51,4 +51,3 @@ INSERT INTO "public"."people__status" (
 VALUES
   (DRAFT, NULL),
   (APPROVED, NULL);
-  

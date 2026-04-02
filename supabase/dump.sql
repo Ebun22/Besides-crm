@@ -197,13 +197,13 @@ CREATE TABLE IF NOT EXISTS "public"."iban__logs" (
 ALTER TABLE "public"."iban__logs" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."iban__status" (
+
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "name" "text" NOT NULL
 );
 
 
-ALTER TABLE "public"."iban__status" OWNER TO "postgres";
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."id_document__types" (
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS "public"."payment__types" (
 );
 
 
-ALTER TABLE "public"."payment__types" OWNER TO "postgres";
+
 
 
 CREATE TABLE IF NOT EXISTS "public"."permission__actions" (
@@ -531,7 +531,7 @@ CREATE POLICY "Enable read access for all users" ON "public"."iban__logs" FOR SE
 
 
 
-CREATE POLICY "Enable read access for all users" ON "public"."iban__status" FOR SELECT TO "authenticated" USING (true);
+
 
 
 
@@ -606,7 +606,7 @@ ALTER TABLE "public"."id_document__types" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."legal_rep__details" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."payment__types" ENABLE ROW LEVEL SECURITY;
+
 
 
 ALTER TABLE "public"."permission__roles" ENABLE ROW LEVEL SECURITY;
@@ -862,12 +862,6 @@ GRANT ALL ON TABLE "public"."iban__logs" TO "service_role";
 
 
 
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."iban__status" TO "anon";
-GRANT SELECT,REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."iban__status" TO "authenticated";
-GRANT ALL ON TABLE "public"."iban__status" TO "service_role";
-
-
-
 GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."id_document__types" TO "anon";
 GRANT ALL ON TABLE "public"."id_document__types" TO "authenticated";
 GRANT ALL ON TABLE "public"."id_document__types" TO "service_role";
@@ -880,9 +874,6 @@ GRANT ALL ON TABLE "public"."legal_rep__details" TO "service_role";
 
 
 
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."payment__types" TO "anon";
-GRANT SELECT,INSERT,REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."payment__types" TO "authenticated";
-GRANT ALL ON TABLE "public"."payment__types" TO "service_role";
 
 
 
