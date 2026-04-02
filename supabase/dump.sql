@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS "public"."customer__status" (
 ALTER TABLE "public"."customer__status" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."customer__supply_details" (
+"public"."customer__supply_details" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "supp_ref" "uuid" NOT NULL,
     "cust_ref" "uuid" NOT NULL
@@ -482,7 +482,7 @@ CREATE POLICY "Enable insert for authenticated users only" ON "public"."customer
 
 
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."customer__supply_details" FOR INSERT TO "authenticated" WITH CHECK (true);
+
 
 
 
@@ -494,7 +494,7 @@ CREATE POLICY "Enable insert for authenticated users only" ON "public"."legal_re
 
 
 
-CREATE POLICY "Enable insert for authenticated users only" ON "public"."supply__details" FOR INSERT TO "authenticated" WITH CHECK (true);
+
 
 
 
@@ -563,7 +563,7 @@ CREATE POLICY "Enable read access for all users" ON "public"."permission__roles"
 
 
 
-CREATE POLICY "Enable read access for all users" ON "public"."supply__details" FOR SELECT TO "authenticated" USING (true);
+
 
 
 
@@ -591,7 +591,7 @@ ALTER TABLE "public"."customer__payment" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."customer__status" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."customer__supply_details" ENABLE ROW LEVEL SECURITY;
+
 
 
 ALTER TABLE "public"."iban__logs" ENABLE ROW LEVEL SECURITY;
@@ -612,7 +612,7 @@ ALTER TABLE "public"."legal_rep__details" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."permission__roles" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."supply__details" ENABLE ROW LEVEL SECURITY;
+
 
 
 
@@ -850,9 +850,7 @@ GRANT ALL ON TABLE "public"."customer__status" TO "service_role";
 
 
 
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."customer__supply_details" TO "anon";
-GRANT ALL ON TABLE "public"."customer__supply_details" TO "authenticated";
-GRANT ALL ON TABLE "public"."customer__supply_details" TO "service_role";
+
 
 
 
@@ -900,10 +898,6 @@ GRANT SELECT,REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."permission_
 GRANT ALL ON TABLE "public"."permission__user_roles" TO "service_role";
 
 
-
-GRANT REFERENCES,TRIGGER,TRUNCATE,MAINTAIN ON TABLE "public"."supply__details" TO "anon";
-GRANT ALL ON TABLE "public"."supply__details" TO "authenticated";
-GRANT ALL ON TABLE "public"."supply__details" TO "service_role";
 
 
 
