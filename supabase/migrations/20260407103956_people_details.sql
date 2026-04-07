@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS "public"."people__details" (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT people__details_id_type_fkey FOREIGN KEY ("id_type")
-    REFERENCES "public"."ID_types" ("id")
+    REFERENCES "public"."ID__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
