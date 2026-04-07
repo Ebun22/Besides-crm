@@ -50,6 +50,6 @@ INSERT INTO "public"."iban__status"(
   "name"
 )
 VALUES
-  (VALID),
-  (INVALID),
-  (UNKNOWN);
+  ('VALID'),
+  ('INVALID'),
+  ('UNKNOWN');

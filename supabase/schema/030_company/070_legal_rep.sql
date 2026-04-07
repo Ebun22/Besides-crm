@@ -20,7 +20,7 @@ REVOKE
   ALL
 ON TABLE
   "public"."company__legal_rep"
-TO
+FROM
   "anon";
 
 GRANT

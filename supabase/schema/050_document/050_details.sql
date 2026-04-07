@@ -71,6 +71,3 @@ WITH CHECK (
 );
 
 ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."document__details";
-
-doc_issuedate bigint null,
-  doc_expdate bigint null,

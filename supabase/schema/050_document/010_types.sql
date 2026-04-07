@@ -53,7 +53,7 @@ INSERT INTO "public"."document__types"
   "description"
 )
 VALUES
-  (virtual_bill,       NULL),
-  (prev_virtual_bill,  NULL),
-  (GDPR,               NULL),
-  (IDENTIFICATION_DOC, NULL);
+  ('virtual_bill',       NULL),
+  ('prev_virtual_bill',  NULL),
+  ('GDPR',               NULL),
+  ('IDENTIFICATION_DOC', NULL);

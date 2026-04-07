@@ -19,7 +19,7 @@ REVOKE
   ALL
 ON TABLE
   "public"."customer__company"
-TO
+FROM
   "anon";
 
 GRANT

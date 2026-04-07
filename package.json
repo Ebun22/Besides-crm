@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "supabase:start" : "npx tsx supabase/scripts/migration.ts && npx supabase start && npx supabase db reset",
+    "supabase:new_migration" : "rm supabase/migrations/* && npx tsx supabase/scripts/migration.ts npx supabase start && npx supabase db reset"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@types/node": "^25.5.2",
     "supabase": "^2.82.0"
   }
 }

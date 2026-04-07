@@ -23,11 +23,11 @@ CREATE TABLE IF NOT EXISTS "public"."people__details" (
   "status"         uuid            NULL,
   CONSTRAINT people__details_pkey         PRIMARY KEY ("id"),
   CONSTRAINT people__details_status_fkey  FOREIGN KEY ("status")
-    REFERENCES "public"."customer__status" ("id")
+    REFERENCES "public"."people__status" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT people__details_id_type_fkey FOREIGN KEY ("id_type")
-    REFERENCES "public"."id_document__types" ("id")
+    REFERENCES "public"."document__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

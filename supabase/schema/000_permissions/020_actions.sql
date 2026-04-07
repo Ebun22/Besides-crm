@@ -12,7 +12,7 @@ REVOKE
   ALL
 ON TABLE
   "public"."permission__actions"
-TO
+FROM
  "anon";
 
 GRANT
