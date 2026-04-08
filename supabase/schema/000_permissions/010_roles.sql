@@ -42,3 +42,13 @@ TO
 USING (
   true
 );
+
+-- SEED
+INSERT INTO "public"."permission__roles"
+(
+  "role",
+  "description"
+)
+VALUES
+ ('Admin',      NULL),
+ ('Consultant', NULL);

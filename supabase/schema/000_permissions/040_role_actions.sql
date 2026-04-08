@@ -54,3 +54,15 @@ TO
 USING (
   true
 );
+
+-- SEED
+INSERT INTO "public"."permission__role_actions"
+(
+  "role_id",
+  "action_id"
+)
+VALUES
+  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'global.create')),
+  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'global.update')),
+  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'global.delete')),
+  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'status.approve'));

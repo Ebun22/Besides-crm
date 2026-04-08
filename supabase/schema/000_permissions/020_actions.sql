@@ -45,3 +45,15 @@ TO
 USING (
   true
 );
+
+-- SEED
+INSERT INTO "public"."permission__actions"
+(
+  "action",
+  "description"
+)
+VALUES
+ ('global.create', 'can insert into all CRM fields'),
+ ('global.update', 'can insert into all CRM fields'),
+ ('global.delete', 'can delete from any CRM field'),
+ ('status.approve', 'can update field from draft to approved');
