@@ -78,6 +78,7 @@ USING (
   true
 );
 
+-- Insert RLS policy
 CREATE POLICY
   "Enable insert for authenticated users only"
 ON
@@ -86,7 +87,37 @@ FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
-  true
+  (
+    SELECT "public"."permissions__action_authorize"('global.create') AS "permissions__action_authorize"
+  )
+);
+
+-- Update RLS Policy
+CREATE POLICY
+  "Enable update for authenticated users only"
+ON
+  "public"."people__details"
+FOR UPDATE
+TO
+  "authenticated"
+USING (
+  (
+    SELECT "public"."permissions__action_authorize"('global.update') AS "permissions__action_authorize"
+  )
+);
+
+-- Delete RLS Policy
+CREATE POLICY
+  "Enable Delete for authenticated users only"
+ON
+  "public"."people__details"
+FOR DELETE
+TO
+  "authenticated"
+USING (
+  (
+    SELECT "public"."permissions__action_authorize"('global.delete') AS "permissions__action_authorize"
+  )
 );
 
 ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."people__details";

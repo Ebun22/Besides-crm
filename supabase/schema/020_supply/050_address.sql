@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS "public"."supply__address" (
   "id"             uuid    NOT NULL DEFAULT gen_random_uuid (),
-  "supp_address_1" text    NULL,
-  "supp_address_2" text    NULL,
-  "supp_zip"       bigint  null,
-  "supp_town"      text    null,
-  "supp_pr"        varchar null,
+  "supp_address_1" text        NULL,
+  "supp_address_2" text        NULL,
+  "supp_zip"       bigint      NULL,
+  "supp_town"      text        NULL,
+  "supp_pr"        varchar     NULL,
   CONSTRAINT supply__address_pkey PRIMARY KEY ("id")
 );
 
