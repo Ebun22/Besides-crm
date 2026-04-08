@@ -2,7 +2,15 @@ CREATE TABLE IF NOT EXISTS "public"."permission__user_roles" (
   "id"   uuid NOT NULL DEFAULT gen_random_uuid (),
   "user" uuid NOT NULL,
   "role" uuid NOT NULL,
-  CONSTRAINT permission__user_roles_pkey PRIMARY KEY ("id")
+  CONSTRAINT permission__user_roles_pkey PRIMARY KEY ("id"),
+  CONSTRAINT permission__user_roles_user_fkey FOREIGN KEY ("user")
+    REFERENCES "auth"."users" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT permission__user_roles_role_fkey FOREIGN KEY ("role")
+    REFERENCES "public"."permission__roles" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 ALTER TABLE "public"."permission__user_roles" ENABLE ROW LEVEL SECURITY;
