@@ -1,17 +1,17 @@
-CREATE TABLE IF NOT EXISTS "public"."ID__types" (
+CREATE TABLE IF NOT EXISTS "public"."people__ID_types" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"        text NOT NULL,
   "description" text     NULL,
-  CONSTRAINT ID__types_pkey PRIMARY KEY ("id")
+  CONSTRAINT people__ID_types_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "public"."ID__types" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."people__ID_types" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."ID__types"
+  "public"."people__ID_types"
 FROM
   "anon";
 
@@ -22,24 +22,24 @@ GRANT
   TRUNCATE,
   MAINTAIN
 ON TABLE
-  "public"."ID__types"
+  "public"."people__ID_types"
 TO
   "authenticated";
 
 GRANT
   ALL
 ON TABLE
-  "public"."ID__types"
+  "public"."people__ID_types"
 TO
   "service_role";
 
 -- RLS
-ALTER TABLE "public"."ID__types" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."people__ID_types" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
   "Enable read access for all users"
 ON
-  "public"."ID__types"
+  "public"."people__ID_types"
 FOR SELECT
 TO
   "authenticated"
@@ -48,7 +48,7 @@ USING (
 );
 
 -- SEED
-INSERT INTO "public"."ID__types" (
+INSERT INTO "public"."people__ID_types" (
   "name",
   "description"
 )

@@ -1,42 +1,42 @@
-CREATE TABLE IF NOT EXISTS "public"."supply__address__customer" (
+CREATE TABLE IF NOT EXISTS "public"."people__supply__address" (
   "id"       uuid NOT NULL DEFAULT gen_random_uuid (),
   "supp_ref" uuid NOT NULL,
   "cust_ref" uuid NOT NULL,
-  CONSTRAINT supply__address__customer_pkey     PRIMARY KEY ("id"),
+  CONSTRAINT people__supply__address_pkey     PRIMARY KEY ("id"),
   CONSTRAINT supply__address_ref_fkey           FOREIGN KEY ("supp_ref")
-    REFERENCES supply__address__customer_details ("id")
+    REFERENCES supply__address ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT supply__address__customer_ref_fkey FOREIGN KEY ("cust_ref")
+  CONSTRAINT supply__address__cust_ref_fkey FOREIGN KEY ("cust_ref")
     REFERENCES people__details ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."customer__supply_details" OWNER TO "postgres";
+ALTER TABLE "public"."people__supply__address" OWNER TO "postgres";
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."customer__supply_details"
-TO
+  "public"."people__supply__address"
+FROM
   "anon";
 
 GRANT
   ALL
 ON TABLE
-  "public"."customer__supply_details"
+  "public"."people__supply__address"
 TO
   "authenticated",
   "service_role";
 
 -- RLS
-ALTER TABLE "public"."customer__supply_details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."people__supply__address" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable insert for authenticated users only"
 ON
-  "public"."customer__supply_details"
+  "public"."people__supply__address"
 FOR INSERT
 TO
   "authenticated"
@@ -46,7 +46,7 @@ WITH CHECK (
 
 CREATE POLICY "Enable read access for all users"
 ON
-  "public"."customer__supply_details"
+  "public"."people__supply__address"
 FOR SELECT
 TO
   "authenticated"

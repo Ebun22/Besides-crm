@@ -19,15 +19,19 @@ CREATE TABLE IF NOT EXISTS "public"."people__details" (
   "cust_zip"       bigint          NULL,
   "cust_town"      text            NULL,
   "cust_pr"        varchar(60)     NULL,
-  "role"           uuid        NOT NULL,
+  "type"           uuid        NOT NULL,
   "status"         uuid            NULL,
   CONSTRAINT people__details_pkey         PRIMARY KEY ("id"),
   CONSTRAINT people__details_status_fkey  FOREIGN KEY ("status")
     REFERENCES "public"."people__status" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
+  CONSTRAINT people__details_type_fkey  FOREIGN KEY ("type")
+    REFERENCES "public"."people__types" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
   CONSTRAINT people__details_id_type_fkey FOREIGN KEY ("id_type")
-    REFERENCES "public"."ID__types" ("id")
+    REFERENCES "public"."people__ID_types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

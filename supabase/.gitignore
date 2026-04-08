@@ -2,6 +2,8 @@
 .branches
 .temp
 
+supabase/migrations/*
+
 # dotenvx
 .env.keys
 .env.local

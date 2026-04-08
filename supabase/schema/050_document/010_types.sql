@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "public"."document__types" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
-  "type"        text NOT NULL,
+  "name"        text NOT NULL,
   "description" text     NULL,
   CONSTRAINT document__types_pkey PRIMARY KEY ("id")
 );

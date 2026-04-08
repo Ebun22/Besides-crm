@@ -5,9 +5,9 @@ CREATE TABLE IF NOT EXISTS "public"."document__details" (
   "doc_issuedate" bigint    NULL,
   "doc_expdate"   bigint    NULL,
   "uploaded_by"   uuid      NULL,
-  "owner"         uuid      NULL
-  CONSTRAINT document__details_pkey       PRIMARY KEY ("id"),
-  CONSTRAINT document__details_type_fkey  FOREIGN KEY ("type")
+  "owner"         uuid      NULL,
+  CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
+  CONSTRAINT document__details_type_fkey FOREIGN KEY ("type")
     REFERENCES "public"."document__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
