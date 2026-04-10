@@ -62,7 +62,7 @@ INSERT INTO "public"."permission__role_actions"
   "action_id"
 )
 VALUES
-  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'global.create')),
-  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'global.update')),
-  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'global.delete')),
-  ((SELECT id FROM "public"."permissions__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permissions__actions" WHERE name = 'status.approve'));
+  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'global.create')),
+  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'global.update')),
+  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'global.delete')),
+  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'status.approve'));

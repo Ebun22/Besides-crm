@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "public"."permission__actions" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid(),
-  "action"      text NOT NULL,
+  "name"      text NOT NULL,
   "description" text NULL,
   CONSTRAINT permission__actions_pkey PRIMARY KEY ("id")
 );
@@ -49,11 +49,11 @@ USING (
 -- SEED
 INSERT INTO "public"."permission__actions"
 (
-  "action",
+  "name",
   "description"
 )
 VALUES
- ('global.create', 'can insert into all CRM fields'),
- ('global.update', 'can insert into all CRM fields'),
- ('global.delete', 'can delete from any CRM field'),
+ ('global.create',  'can insert into all CRM fields'),
+ ('global.update',  'can insert into all CRM fields'),
+ ('global.delete',  'can delete from any CRM field'),
  ('status.approve', 'can update field from draft to approved');

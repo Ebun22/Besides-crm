@@ -88,7 +88,7 @@ TO
   "authenticated"
 WITH CHECK (
   (
-    SELECT "public"."permissions__action_authorize"('global.create') AS "permissions__action_authorize"
+    SELECT "public"."permission__action_authorize"('global.create') AS "permission__action_authorize"
   )
 );
 
@@ -102,7 +102,7 @@ TO
   "authenticated"
 USING (
   (
-    SELECT "public"."permissions__action_authorize"('global.update') AS "permissions__action_authorize"
+    SELECT "public"."permission__action_authorize"('global.update') AS "permission__action_authorize"
   )
 );
 
@@ -116,8 +116,37 @@ TO
   "authenticated"
 USING (
   (
-    SELECT "public"."permissions__action_authorize"('global.delete') AS "permissions__action_authorize"
+    SELECT "public"."permission__action_authorize"('global.delete') AS "permission__action_authorize"
   )
 );
 
 ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."people__details";
+
+-- TRIGGER
+CREATE OR REPLACE FUNCTION "public"."set_default_people_status"()
+RETURNS TRIGGER AS $$
+BEGIN
+    SELECT "id"
+    INTO NEW."status"
+    FROM "public"."people__status"
+    WHERE "name" = 'DRAFT'
+    LIMIT 1;
+
+    -- Safety: if DRAFT does not exist in people__status, block the insert
+    IF NEW."status" IS NULL THEN
+        RAISE EXCEPTION 'Setup Error: No DRAFT entry found in people__status table.';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS
+  "tr_set_default_people_status"
+ON
+  "public"."people__details";
+
+CREATE TRIGGER "tr_set_default_people_status"
+BEFORE INSERT ON "public"."people__details"
+FOR EACH ROW
+EXECUTE FUNCTION "public"."set_default_people_status"();

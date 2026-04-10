@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION "public"."permissions__action_authorize"
+CREATE OR REPLACE FUNCTION "public"."permission__action_authorize"
 (
   "requested_action" "text"
 )
@@ -17,7 +17,7 @@ BEGIN
   -- Get the ID of the requested action based on its name
   SELECT id
   INTO requested_action_id
-  FROM "public"."permissions__actions"
+  FROM "public"."permission__actions"
   WHERE name = requested_action;
 
   -- If no such action found, deny access
@@ -29,7 +29,7 @@ BEGIN
   -- Get all role_ids for the current user
   SELECT array_agg(role_id)
   INTO user_roles
-  FROM "public"."permissions__user_roles"
+  FROM "public"."permission__user_roles"
   WHERE user_id = auth.uid();
 
   -- If the user has no roles, deny access
@@ -40,7 +40,7 @@ BEGIN
   -- Check if any of the user's roles are authorized for the action
   SELECT count(*)
   INTO bind_permissions
-  FROM "public"."permissions__role_actions"
+  FROM "public"."permission__role_actions"
   WHERE role_id = any(user_roles)
     AND action_id = requested_action_id;
 
@@ -48,7 +48,7 @@ BEGIN
 END;
 $$;
 
-ALTER FUNCTION "public"."permissions__action_authorize"
+ALTER FUNCTION "public"."permission__action_authorize"
 (
   "requested_action" "text"
 ) OWNER TO "postgres";
