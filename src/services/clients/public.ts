@@ -38,37 +38,3 @@ export async function auth_client(
 
     return client;
 };
-
-let token_client_instance : SupabaseClient | undefined = undefined;
-
-export async function Token_Client(
-    access_token  : string,
-    refresh_token : string,
-) : Promise<SupabaseClient> {
-    if (!access_token || !refresh_token) {
-        throw new Error("Empty tokens for client!");
-    };
-
-    // if client with this access token already exist, return that
-    if (token_client_instance &&
-        access_token === (await token_client_instance.auth.getSession()).data.session?.access_token
-    ) {
-        return token_client_instance;
-    };
-
-    // Else create new client
-    const client = Publishable_Client();
-    
-    // Set the session - Supabase will handle refresh automatically
-    const { error } = await client.auth.setSession({
-        access_token,
-        refresh_token
-    });
-
-    if (error) {
-        throw error;
-    };
-
-    return client;
-};
-
