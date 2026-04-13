@@ -1,20 +1,21 @@
 {
-  "include": ["src/**/*", "tests/**/*", "supabase/**/*", "migrate.ts"],
+  "include": ["src/**/*", "tests/**/*", "supabase/**/*", "migrate.ts", "env/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "baseUrl": ".",
     "paths": {
-      "@env/*" : ["env/*"]
+      "@env/*" : ["./env/*"]
     },
-    "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
-    "types": ["node"]
+    "types": [
+      "node",
+      "vite/client"
+    ]
   }
 }
