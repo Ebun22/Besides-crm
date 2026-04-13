@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "supabase:start" : "npx tsx supabase/scripts/migration.ts && npx supabase start && npx supabase db reset",
-    "supabase:init" : "rm supabase/migrations/* && npx tsx supabase/scripts/migration.ts && npx supabase start && npx supabase db reset"
+    "supabase:start": "npx tsx supabase/scripts/migration.ts && npx supabase start && npx supabase db reset",
+    "supabase:init": "rm supabase/migrations/* && npx tsx supabase/scripts/migration.ts && npx supabase start && npx supabase db reset"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +17,12 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^25.5.2",
-    "supabase": "^2.82.0"
+    "@vitejs/plugin-react": "^6.0.1",
+    "supabase": "^2.82.0",
+    "vite": "^8.0.8",
+    "vite-tsconfig-paths": "^6.1.1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0"
   }
 }
