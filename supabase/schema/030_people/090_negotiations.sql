@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "public"."people__negotiations" (
   CONSTRAINT people__negotiations_customer_fkey  FOREIGN KEY ("cust_ref")
     REFERENCES people__details ("id")
     ON UPDATE CASCADE
-    ON DELETE CASCADE,
+    ON DELETE CASCADE
 );
 
 ALTER TABLE "public"."people__negotiations" OWNER TO "postgres";

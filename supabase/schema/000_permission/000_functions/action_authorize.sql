@@ -30,7 +30,7 @@ BEGIN
   SELECT array_agg(role_id)
   INTO user_roles
   FROM "public"."permission__user_roles"
-  WHERE user_id = auth.uid();
+  WHERE "user" = auth.uid();
 
   -- If the user has no roles, deny access
   IF user_roles IS NULL THEN
@@ -41,7 +41,7 @@ BEGIN
   SELECT count(*)
   INTO bind_permissions
   FROM "public"."permission__role_actions"
-  WHERE role_id = any(user_roles)
+  WHERE "role" = any(user_roles)
     AND action_id = requested_action_id;
 
   RETURN bind_permissions > 0;

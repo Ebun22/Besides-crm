@@ -23,6 +23,10 @@ export async function auth_client(
 ) {
     const client = Publishable_Client();
 
+    const { data: { session } } = await client.auth.getSession();
+
+    if (session) return client;
+
     const { data, error } = await client.auth.signInWithPassword({
         email,
         password

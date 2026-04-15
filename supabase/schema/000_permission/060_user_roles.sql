@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "public"."permission__user_roles" (
   "id"   uuid NOT NULL DEFAULT gen_random_uuid (),
-  "user" uuid NOT NULL,
+  "user" uuid NOT NULL DEFAULT "auth"."uid"(),
   "role" uuid NOT NULL,
   CONSTRAINT permission__user_roles_pkey PRIMARY KEY ("id"),
   CONSTRAINT permission__user_roles_user_fkey FOREIGN KEY ("user")
