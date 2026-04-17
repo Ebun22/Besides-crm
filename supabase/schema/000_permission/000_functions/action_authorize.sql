@@ -26,8 +26,8 @@ BEGIN
     RETURN false;
   END IF;
 
-  -- Get all role_ids for the current user
-  SELECT array_agg(role_id)
+  -- Get all role for the current user
+  SELECT array_agg("role")
   INTO user_roles
   FROM "public"."permission__user_roles"
   WHERE "user" = auth.uid();
@@ -42,7 +42,7 @@ BEGIN
   INTO bind_permissions
   FROM "public"."permission__role_actions"
   WHERE "role" = any(user_roles)
-    AND action_id = requested_action_id;
+    AND "action" = requested_action_id;
 
   RETURN bind_permissions > 0;
 END;

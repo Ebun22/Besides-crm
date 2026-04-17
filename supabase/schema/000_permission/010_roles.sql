@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "public"."permission__roles" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
-  "role"        text NOT NULL,
+  "name"        text NOT NULL,
   "description" text     NULL,
   CONSTRAINT pemission_roles_pkey PRIMARY KEY ("id")
 );
@@ -46,7 +46,7 @@ USING (
 -- SEED
 INSERT INTO "public"."permission__roles"
 (
-  "role",
+  "name",
   "description"
 )
 VALUES

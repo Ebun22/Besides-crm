@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS "public"."permission__role_actions" (
-  "id"        uuid NOT NULL DEFAULT gen_random_uuid (),
-  "role_id"   uuid NOT NULL,
-  "action_id" uuid NOT NULL,
+  "id"     uuid NOT NULL DEFAULT gen_random_uuid (),
+  "role"   uuid NOT NULL,
+  "action" uuid NOT NULL,
   CONSTRAINT permission__role_actions_pkey           PRIMARY KEY ("id"),
-  CONSTRAINT permission__role_actions_role_id_fkey   FOREIGN KEY ("role_id")
+  CONSTRAINT permission__role_actions_role_fkey   FOREIGN KEY ("role")
     REFERENCES "public"."permission__roles" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT permission__role_actions_action_id_fkey FOREIGN KEY ("action_id")
+  CONSTRAINT permission__role_actions_action_fkey FOREIGN KEY ("action")
     REFERENCES "public"."permission__actions" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
@@ -58,11 +58,11 @@ USING (
 -- SEED
 INSERT INTO "public"."permission__role_actions"
 (
-  "role_id",
-  "action_id"
+  "role",
+  "action"
 )
 VALUES
-  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'global.create')),
-  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'global.update')),
-  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'global.delete')),
-  ((SELECT id FROM "public"."permission__roles" WHERE role = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE name = 'status.approve'));
+  ((SELECT id FROM "public"."permission__roles" WHERE "name" = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE "name" = 'global.create')),
+  ((SELECT id FROM "public"."permission__roles" WHERE "name" = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE "name" = 'global.update')),
+  ((SELECT id FROM "public"."permission__roles" WHERE "name" = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE "name" = 'global.delete')),
+  ((SELECT id FROM "public"."permission__roles" WHERE "name" = 'Consultant'), (SELECT id FROM "public"."permission__actions" WHERE "name" = 'status.approve'));
