@@ -54,3 +54,36 @@ TO
 USING (
   true
 );
+
+CREATE OR REPLACE FUNCTION "public"."auto_assign_consultant_role"()
+RETURNS TRIGGER
+AS $$
+DECLARE
+  v_role_id uuid;
+BEGIN
+  IF NEW.email = 'Roldofo@besides.com' THEN
+    SELECT id INTO v_role_id
+    FROM permission__roles
+    WHERE name = 'Consultant'
+    LIMIT 1;
+
+    IF v_role_id IS NOT NULL THEN
+      INSERT INTO permission__user_roles
+      (
+        "user_id",
+        "role_id"
+      )
+      VALUES
+        (NEW.id, v_role_id)
+      ON CONFLICT DO NOTHING;
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER trg_auto_assign_consultant_role
+AFTER INSERT ON "auth"."users"
+FOR EACH ROW
+EXECUTE FUNCTION "public"."auto_assign_consultant_role"();
