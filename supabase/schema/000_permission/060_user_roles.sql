@@ -55,20 +55,21 @@ USING (
   true
 );
 
+
 CREATE OR REPLACE FUNCTION "public"."auto_assign_consultant_role"()
 RETURNS TRIGGER
 AS $$
 DECLARE
   v_role_id uuid;
 BEGIN
-  IF NEW.email = 'Roldofo@besides.com' THEN
+  IF NEW.email = 'roldofo@besides.com' THEN
     SELECT id INTO v_role_id
-    FROM permission__roles
-    WHERE name = 'Consultant'
+    FROM "public"."permission__roles"
+    WHERE "name" = 'Consultant'
     LIMIT 1;
 
     IF v_role_id IS NOT NULL THEN
-      INSERT INTO permission__user_roles
+      INSERT INTO "public"."permission__user_roles"
       (
         "user_id",
         "role_id"
