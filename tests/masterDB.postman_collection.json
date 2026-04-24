@@ -1,10 +1,10 @@
 {
   "info": {
-    "_postman_id": "94c1de69-2cae-482f-80fc-c9e2b23ce294",
+    "_postman_id": "4440b119-e238-4118-8209-3457f0aad9bd",
     "name": "BESIDES CRM",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "18554291",
-    "_collection_link": "https://go.postman.co/collection/18554291-94c1de69-2cae-482f-80fc-c9e2b23ce294?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/18554291-4440b119-e238-4118-8209-3457f0aad9bd?source=collection_link"
   },
   "item": [
     {
@@ -16,7 +16,7 @@
             "exec": [
               "var jsonData = pm.response.json();\r",
               "pm.collectionVariables.set(\"access_token\", jsonData.access_token);\r",
-              "console.log(\"✅ Token saved:\", jsonData.access_token.substring(0, 50));"
+              "console.log(\"Token saved:\", jsonData.access_token.substring(0, 50));"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -91,7 +91,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"cognome\": \"Rossi\",\r\n  \"nome\": \"Mario\",\r\n  \"cod_fis\": \"RSSMRA80A01H501Z\",\r\n  \"email\": \"mario@gmail.com\",\r\n  \"cl_celnum\": \"3331234567\",\r\n  \"tit_birthplace\": \"Milano\",\r\n  \"tit_birth_date\": \"1980-01-01\",\r\n  \"tit_gender\": \"M\",\r\n  \"cust_address_1\": \"Via Roma 123\",\r\n  \"cust_zip\": 20100,\r\n  \"cust_town\": \"Milano\",\r\n  \"type\": \"26cc24a4-29ae-4bfd-993a-aeeddd896335\"\r\n}",
+          "raw": "{\r\n  \"cognome\": \"Rossi\",\r\n  \"nome\": \"Mario\",\r\n  \"cod_fis\": \"RSSMRA80A01H501Z\",\r\n  \"email\": \"mario@gmail.com\",\r\n  \"cl_celnum\": \"3331234567\",\r\n  \"tit_birthplace\": \"Milano\",\r\n  \"tit_birth_date\": \"1980-01-01\",\r\n  \"tit_gender\": \"M\",\r\n  \"cust_address_1\": \"Via Roma 123\",\r\n  \"cust_zip\": 20100,\r\n  \"cust_town\": \"Milano\",\r\n  \"type\": \"5de9592c-1776-42c3-be02-37d94de24868\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -250,7 +250,7 @@
   "variable": [
     {
       "key": "supabase_url",
-      "value": "http://100.68.33.41:54321"
+      "value": "http://127.0.0.1:54321"
     },
     {
       "key": "access_token",
