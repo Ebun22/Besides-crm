@@ -40,7 +40,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"email\": \"Roldofo@besides.com\",\n  \"password\": \"Besides@2026\"\n}",
+          "raw": "{\n  \"email\": \"Rodolfo@besides.com\",\n  \"password\": \"Besides@2026\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -178,7 +178,7 @@
           }
         },
         "url": {
-          "raw": "{{supabase_url}}/rest/v1/people__details?id=12a441fd-304d-4fd9-b7cc-32e0b4744f5b",
+          "raw": "{{supabase_url}}/rest/v1/people__details?id=eq.5fa8740d-f68e-4a03-b146-e6554985ed77",
           "host": [
             "{{supabase_url}}"
           ],
@@ -190,7 +190,7 @@
           "query": [
             {
               "key": "id",
-              "value": "12a441fd-304d-4fd9-b7cc-32e0b4744f5b"
+              "value": "eq.5fa8740d-f68e-4a03-b146-e6554985ed77"
             }
           ]
         }
@@ -225,7 +225,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"ragione_sociale\": \"Tech Solutions SRL\",\r\n  \"p_iva\": \"12345678901\",\r\n  \"cf_azienda\": \"12345678901\",\r\n  \"legal_rep_id\": \"uuid-of-legal-rep-person\"\r\n}",
+          "raw": "{\r\n  \"ragione_sociale\": \"Tech Solutions SRL\",\r\n  \"p_iva\": \"12345678901\",\r\n  \"cf_azienda\": \"12345678901\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -250,7 +250,7 @@
   "variable": [
     {
       "key": "supabase_url",
-      "value": "http://127.0.0.1:54321"
+      "value": "http://100.68.33.41:54321"
     },
     {
       "key": "access_token",
