@@ -16,7 +16,7 @@
             "exec": [
               "var jsonData = pm.response.json();\r",
               "pm.collectionVariables.set(\"access_token\", jsonData.access_token);\r",
-              "console.log(\"Token saved:\", jsonData.access_token.substring(0, 50));"
+              "console.log(\"✅ Token saved:\", jsonData.access_token.substring(0, 50));"
             ],
             "type": "text/javascript",
             "packages": {},
