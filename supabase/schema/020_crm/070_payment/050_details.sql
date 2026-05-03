@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."payment__details" (
+CREATE TABLE IF NOT EXISTS "crm"."payment__details" (
   "id"                 uuid NOT NULL DEFAULT gen_random_uuid (),
   "cust_ref"           uuid     NULL DEFAULT gen_random_uuid (),
   "pay_type"           uuid     NULL,
@@ -19,6 +19,6 @@ CREATE TABLE IF NOT EXISTS "public"."payment__details" (
     ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."payment__details" OWNER TO "postgres";
+ALTER TABLE "crm"."payment__details" OWNER TO "postgres";
 
-ALTER TABLE "public"."payment__details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "crm"."payment__details" ENABLE ROW LEVEL SECURITY;

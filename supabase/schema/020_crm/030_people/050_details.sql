@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."people__details" (
+CREATE TABLE IF NOT EXISTS "crm"."people__details" (
   "id"             uuid        NOT NULL DEFAULT gen_random_uuid (),
   "cognome"        text            NULL,
   "nome"           text            NULL,
@@ -23,28 +23,28 @@ CREATE TABLE IF NOT EXISTS "public"."people__details" (
   "status"         uuid            NULL,
   CONSTRAINT people__details_pkey         PRIMARY KEY ("id"),
   CONSTRAINT people__details_status_fkey  FOREIGN KEY ("status")
-    REFERENCES "public"."people__status" ("id")
+    REFERENCES "crm"."people__status" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT people__details_type_fkey  FOREIGN KEY ("type")
-    REFERENCES "public"."people__types" ("id")
+    REFERENCES "crm"."people__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT people__details_id_type_fkey FOREIGN KEY ("id_type")
-    REFERENCES "public"."people__ID_types" ("id")
+    REFERENCES "crm"."people__ID_types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."people__details" OWNER TO "postgres";
+ALTER TABLE "crm"."people__details" OWNER TO "postgres";
 
-ALTER TABLE "public"."people__details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "crm"."people__details" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."people__details"
+  "crm"."people__details"
 FROM
   "anon";
 
@@ -55,14 +55,14 @@ GRANT
   TRUNCATE,
   MAINTAIN
 ON TABLE
-  "public"."people__details"
+  "crm"."people__details"
 TO
   "authenticated";
 
 GRANT
   ALL
 ON TABLE
-  "public"."people__details"
+  "crm"."people__details"
 TO
   "service_role";
 
@@ -70,7 +70,7 @@ TO
 CREATE POLICY
   "Enable read access for all users"
 ON
-  "public"."people__details"
+  "crm"."people__details"
 FOR SELECT
 TO
   "authenticated"
@@ -82,13 +82,13 @@ USING (
 CREATE POLICY
   "Enable insert for authenticated users only"
 ON
-  "public"."people__details"
+  "crm"."people__details"
 FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
   (
-    SELECT "public"."permission__action_authorize"('global.create') AS "permission__action_authorize"
+    SELECT "crm"."permission__action_authorize"('global.create') AS "permission__action_authorize"
   )
 );
 
@@ -96,13 +96,13 @@ WITH CHECK (
 CREATE POLICY
   "Enable update for authenticated users only"
 ON
-  "public"."people__details"
+  "crm"."people__details"
 FOR UPDATE
 TO
   "authenticated"
 USING (
   (
-    SELECT "public"."permission__action_authorize"('global.update') AS "permission__action_authorize"
+    SELECT "crm"."permission__action_authorize"('global.update') AS "permission__action_authorize"
   )
 );
 
@@ -110,25 +110,25 @@ USING (
 CREATE POLICY
   "Enable Delete for authenticated users only"
 ON
-  "public"."people__details"
+  "crm"."people__details"
 FOR DELETE
 TO
   "authenticated"
 USING (
   (
-    SELECT "public"."permission__action_authorize"('global.delete') AS "permission__action_authorize"
+    SELECT "crm"."permission__action_authorize"('global.delete') AS "permission__action_authorize"
   )
 );
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."people__details";
+ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "crm"."people__details";
 
 -- TRIGGER
-CREATE OR REPLACE FUNCTION "public"."set_default_people_status"()
+CREATE OR REPLACE FUNCTION "crm"."set_default_people_status"()
 RETURNS TRIGGER AS $$
 BEGIN
     SELECT "id"
     INTO NEW."status"
-    FROM "public"."people__status"
+    FROM "crm"."people__status"
     WHERE "name" = 'DRAFT'
     LIMIT 1;
 
@@ -144,9 +144,9 @@ $$ LANGUAGE plpgsql;
 DROP TRIGGER IF EXISTS
   "tr_set_default_people_status"
 ON
-  "public"."people__details";
+  "crm"."people__details";
 
 CREATE TRIGGER "tr_set_default_people_status"
-BEFORE INSERT ON "public"."people__details"
+BEFORE INSERT ON "crm"."people__details"
 FOR EACH ROW
-EXECUTE FUNCTION "public"."set_default_people_status"();
+EXECUTE FUNCTION "crm"."set_default_people_status"();

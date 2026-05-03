@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."company__details" (
+CREATE TABLE IF NOT EXISTS "crm"."company__details" (
   "id"              uuid    NOT NULL DEFAULT gen_random_uuid (),
   "ragione_sociale" text    NULL,
   "tipo_azienda"    uuid    NULL,
@@ -11,30 +11,30 @@ CREATE TABLE IF NOT EXISTS "public"."company__details" (
     ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."company__details" OWNER TO "postgres";
+ALTER TABLE "crm"."company__details" OWNER TO "postgres";
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."company__details"
+  "crm"."company__details"
 FROM
   "anon";
 
 GRANT
   ALL
 ON TABLE
-  "public"."company__details"
+  "crm"."company__details"
 TO
   "authenticated",
   "service_role";
 
 -- RLS
-ALTER TABLE "public"."company__details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "crm"."company__details" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable read access for all users"
 ON
-  "public"."company__details"
+  "crm"."company__details"
 FOR SELECT
 TO
   "authenticated"
@@ -44,7 +44,7 @@ USING (
 
 CREATE POLICY "Enable insert for authenticated users only"
 ON
-  "public"."company__details"
+  "crm"."company__details"
 FOR INSERT
 TO
   "authenticated"
@@ -53,4 +53,4 @@ WITH CHECK (
 );
 
 -- TODO: ADD UPDATE RLS
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."company__details";
+ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "crm"."company__details";

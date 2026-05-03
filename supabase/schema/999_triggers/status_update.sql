@@ -9,7 +9,7 @@ DECLARE
 BEGIN
   SELECT "id"
   INTO v_draft_status__id
-  FROM "public"."people__status"
+  FROM "crm"."people__status"
   WHERE "name" = 'DRAFT'
   LIMIT 1;
   IF v_draft_status__id  IS NULL
@@ -19,7 +19,7 @@ BEGIN
 
   SELECT "id"
   INTO v_approved_status__id
-  FROM "public"."people__status"
+  FROM "crm"."people__status"
   WHERE "name" = 'APPROVED'
   LIMIT 1;
   IF v_approved_status__id IS NULL
@@ -55,8 +55,8 @@ BEGIN
     -- CHECK 2: A fully filled supply address is linked via the join table
     IF NOT EXISTS (
         SELECT 1
-        FROM  "public"."people__supply__address" "psa"
-        JOIN  "public"."supply__address"         "sa"  ON "sa"."id" = "psa"."supp_ref"
+        FROM  "crm"."people__supply__address" "psa"
+        JOIN  "crm"."supply__address"         "sa"  ON "sa"."id" = "psa"."supp_ref"
         WHERE "psa"."cust_ref"       = NEW."id"
         AND   "sa"."supp_address_1" IS NOT NULL
         AND   "sa"."supp_zip"       IS NOT NULL
@@ -69,7 +69,7 @@ BEGIN
     -- CHECK 3: Payment details exist for this person with key fields filled
     IF NOT EXISTS (
         SELECT 1
-        FROM  "public"."payment__details"
+        FROM  "crm"."payment__details"
         WHERE "cust_ref"     = NEW."id"
         AND   "pay_type"    IS NOT NULL
         AND   "cv_cognome"  IS NOT NULL
@@ -82,8 +82,8 @@ BEGIN
     -- TENTATIVE: CHECK that customer has invoice
     IF NOT EXISTS (
         SELECT 1
-        FROM "public"."document__details" "dd"
-        JOIN "public"."document__types"   "dt"
+        FROM "crm"."document__details" "dd"
+        JOIN "crm"."document__types"   "dt"
         ON "dt"."id"        = "dd"."type"
         WHERE "dd"."owner"  = NEW."id"
         AND   "dt"."name"   = 'invoice'
@@ -94,8 +94,8 @@ BEGIN
     -- TENTATIVE: A linked company exists via the join table with required fields filled
     IF NOT EXISTS (
         SELECT 1
-        FROM  "public"."people__company"  "pc"
-        JOIN  "public"."company__details" "cd" ON "cd"."id" = "pc"."comp_ref"
+        FROM  "crm"."people__company"  "pc"
+        JOIN  "crm"."company__details" "cd" ON "cd"."id" = "pc"."comp_ref"
         WHERE "pc"."cust_ref"        = NEW."id"
         AND   "cd"."ragione_sociale" IS NOT NULL
         AND   "cd"."p_iva"           IS NOT NULL
@@ -110,9 +110,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS "tr_ensure_CRM_ready_for_approval" ON "public"."people__details";
+DROP TRIGGER IF EXISTS "tr_ensure_CRM_ready_for_approval" ON "crm"."people__details";
 
 CREATE TRIGGER "tr_ensure_CRM_ready_for_approval"
-BEFORE UPDATE ON "public"."people__details"
+BEFORE UPDATE ON "crm"."people__details"
 FOR EACH ROW
 EXECUTE FUNCTION "public"."validate_status_update_to_approved"();

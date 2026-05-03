@@ -1,8 +1,4 @@
-UPDATE "public"."people__details"
-SET "status" = (
-    SELECT "id"
-    FROM   "public"."people__status"
-    WHERE  "name" = 'APPROVED'
-    LIMIT  1
-)
-WHERE  "id" = '1cadafc5-a483-4d49-a999-3bdff8de34a8'::uuid;
+SELECT schema_name 
+FROM information_schema.schemata 
+WHERE schema_name IN ('crm', 'bms', 'public', 'auth')
+ORDER BY schema_name;
