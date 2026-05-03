@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."document__details" (
+CREATE TABLE IF NOT EXISTS "bms"."document__details" (
   "id"            uuid  NOT NULL DEFAULT gen_random_uuid (),
   "document"      text      NULL,
   "type"          uuid      NULL,
@@ -8,24 +8,24 @@ CREATE TABLE IF NOT EXISTS "public"."document__details" (
   "owner"         uuid      NULL,
   CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
   CONSTRAINT document__details_type_fkey FOREIGN KEY ("type")
-    REFERENCES "public"."document__types" ("id")
+    REFERENCES "bms"."document__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT document__details_owner_fkey FOREIGN KEY ("owner")
-    REFERENCES "public"."people__details" ("id")
+    REFERENCES "bms"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."document__details" OWNER TO "postgres";
+ALTER TABLE "bms"."document__details" OWNER TO "postgres";
 
-ALTER TABLE "public"."document__details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."document__details" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."document__details"
+  "bms"."document__details"
 FROM
   "anon";
 
@@ -36,14 +36,14 @@ GRANT
   TRUNCATE,
   MAINTAIN
 ON TABLE
-  "public"."document__details"
+  "bms"."document__details"
 TO
   "authenticated";
 
 GRANT
   ALL
 ON TABLE
-  "public"."document__details"
+  "bms"."document__details"
 TO
   "service_role";
 
@@ -51,7 +51,7 @@ TO
 CREATE POLICY
   "Enable read access for all users"
 ON
-  "public"."document__details"
+  "bms"."document__details"
 FOR SELECT
 TO
   "authenticated"
@@ -62,7 +62,7 @@ USING (
 CREATE POLICY
   "Enable insert for authenticated users only"
 ON
-  "public"."document__details"
+  "bms"."document__details"
 FOR INSERT
 TO
   "authenticated"
@@ -70,4 +70,4 @@ WITH CHECK (
   true
 );
 
-ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "public"."document__details";
+ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "bms"."document__details";

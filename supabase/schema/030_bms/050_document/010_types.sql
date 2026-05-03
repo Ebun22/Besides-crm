@@ -1,17 +1,17 @@
-CREATE TABLE IF NOT EXISTS "public"."document__types" (
+CREATE TABLE IF NOT EXISTS "bms"."document__types" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"        text NOT NULL,
   "description" text     NULL,
   CONSTRAINT document__types_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "public"."document__types" OWNER TO "postgres";
+ALTER TABLE "bms"."document__types" OWNER TO "postgres";
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."document__types"
+  "bms"."document__types"
 FROM
   "anon";
 
@@ -22,23 +22,23 @@ GRANT
   TRUNCATE,
   MAINTAIN
 ON TABLE
-  "public"."permission__actions"
+  "bms"."permission__actions"
 TO
   "authenticated";
 
 GRANT
   ALL
 ON TABLE
-  "public"."document__types"
+  "bms"."document__types"
 TO
   "service_role";
 
 -- RLS
-ALTER TABLE "public"."document__types" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."document__types" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable read access for all users"
 ON
-  "public"."document__types"
+  "bms"."document__types"
 FOR SELECT
 TO
   "authenticated"
@@ -47,7 +47,7 @@ USING (
 );
 
 -- SEED
-INSERT INTO "public"."document__types"
+INSERT INTO "bms"."document__types"
 (
   "name",
   "description"

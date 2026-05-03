@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."people__supply__address" (
+CREATE TABLE IF NOT EXISTS "bms"."people__supply__address" (
   "id"       uuid NOT NULL DEFAULT gen_random_uuid (),
   "supp_ref" uuid NOT NULL,
   "cust_ref" uuid NOT NULL,
@@ -13,30 +13,30 @@ CREATE TABLE IF NOT EXISTS "public"."people__supply__address" (
     ON DELETE CASCADE
 );
 
-ALTER TABLE "public"."people__supply__address" OWNER TO "postgres";
+ALTER TABLE "bms"."people__supply__address" OWNER TO "postgres";
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."people__supply__address"
+  "bms"."people__supply__address"
 FROM
   "anon";
 
 GRANT
   ALL
 ON TABLE
-  "public"."people__supply__address"
+  "bms"."people__supply__address"
 TO
   "authenticated",
   "service_role";
 
 -- RLS
-ALTER TABLE "public"."people__supply__address" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."people__supply__address" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable insert for authenticated users only"
 ON
-  "public"."people__supply__address"
+  "bms"."people__supply__address"
 FOR INSERT
 TO
   "authenticated"
@@ -46,7 +46,7 @@ WITH CHECK (
 
 CREATE POLICY "Enable read access for all users"
 ON
-  "public"."people__supply__address"
+  "bms"."people__supply__address"
 FOR SELECT
 TO
   "authenticated"

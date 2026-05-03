@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."supply__point" (
+CREATE TABLE IF NOT EXISTS "bms"."supply__point" (
   "id"             uuid    NOT NULL DEFAULT gen_random_uuid (),
   "supp_address_1" text        NULL,
   "supp_address_2" text        NULL,
@@ -8,30 +8,30 @@ CREATE TABLE IF NOT EXISTS "public"."supply__point" (
   CONSTRAINT supply__address_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "public"."supply__address" OWNER TO "postgres";
+ALTER TABLE "bms"."supply__address" OWNER TO "postgres";
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "public"."supply__address"
+  "bms"."supply__address"
 FROM
   "anon";
 
 GRANT
   ALL
 ON TABLE
-  "public"."supply__address"
+  "bms"."supply__address"
 TO
   "authenticated",
   "service_role";
 
 -- RLS
-ALTER TABLE "public"."supply__address" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."supply__address" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable read access for all users"
 ON
-  "public"."supply__address"
+  "bms"."supply__address"
 FOR SELECT
 TO
   "authenticated"
@@ -41,7 +41,7 @@ USING (
 
 CREATE POLICY "Enable insert for authenticated users only"
 ON
-  "public"."supply__address"
+  "bms"."supply__address"
 FOR INSERT
 TO
   "authenticated"
