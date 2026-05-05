@@ -21,7 +21,8 @@ REVOKE
 ON TABLE
   "bms"."people__supply__address"
 FROM
-  "anon";
+  "anon",
+  "authenticated",
 
 GRANT
   ALL
