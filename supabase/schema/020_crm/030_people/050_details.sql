@@ -88,7 +88,7 @@ TO
   "authenticated"
 WITH CHECK (
   (
-    SELECT "crm"."permission__action_authorize"('global.create') AS "permission__action_authorize"
+    SELECT "public"."permission__action_authorize"('global.create') AS "permission__action_authorize"
   )
 );
 
@@ -102,7 +102,7 @@ TO
   "authenticated"
 USING (
   (
-    SELECT "crm"."permission__action_authorize"('global.update') AS "permission__action_authorize"
+    SELECT "public"."permission__action_authorize"('global.update') AS "permission__action_authorize"
   )
 );
 
@@ -116,14 +116,14 @@ TO
   "authenticated"
 USING (
   (
-    SELECT "crm"."permission__action_authorize"('global.delete') AS "permission__action_authorize"
+    SELECT "public"."permission__action_authorize"('global.delete') AS "permission__action_authorize"
   )
 );
 
 ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "crm"."people__details";
 
 -- TRIGGER
-CREATE OR REPLACE FUNCTION "crm"."set_default_people_status"()
+CREATE OR REPLACE FUNCTION "public"."set_default_people_status"()
 RETURNS TRIGGER AS $$
 BEGIN
     SELECT "id"
@@ -149,4 +149,4 @@ ON
 CREATE TRIGGER "tr_set_default_people_status"
 BEFORE INSERT ON "crm"."people__details"
 FOR EACH ROW
-EXECUTE FUNCTION "crm"."set_default_people_status"();
+EXECUTE FUNCTION "public"."set_default_people_status"();
