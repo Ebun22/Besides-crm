@@ -17,7 +17,7 @@ FROM
   "authenticated";
 
 GRANT
-  SELECT,
+  SELECT
 ON TABLE
   "crm"."document__types"
 TO
