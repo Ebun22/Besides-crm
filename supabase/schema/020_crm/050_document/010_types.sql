@@ -13,16 +13,13 @@ REVOKE
 ON TABLE
   "crm"."document__types"
 FROM
-  "anon";
+  "anon",
+  "authenticated";
 
 GRANT
   SELECT,
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
 ON TABLE
-  "crm"."permission__actions"
+  "crm"."document__types"
 TO
   "authenticated";
 
