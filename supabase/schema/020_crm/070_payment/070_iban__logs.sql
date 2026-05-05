@@ -7,11 +7,11 @@ CREATE TABLE IF NOT EXISTS "public"."iban__logs" (
   "iban_country"    text     NULL,
   CONSTRAINT iban_logs_pkey primary key ("id"),
   CONSTRAINT iban__logs_iban_api_status_fkey FOREIGN KEY ("iban_api_status")
-    REFERENCES iban__status ("id")
+    REFERENCES "crm"."iban__status" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT iban__logs_payment_fkey         FOREIGN KEY ("payment")
-    REFERENCES payment__details ("id")
+    REFERENCES "crm"."payment__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

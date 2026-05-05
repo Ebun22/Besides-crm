@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS "crm"."payment__details" (
   "cc_tit_sex"         varchar  NULL,
   CONSTRAINT payment_details_pkey            PRIMARY KEY ("id"),
   CONSTRAINT payment__details_customer_fkey  FOREIGN KEY ("cust_ref")
-    REFERENCES people__details ("id")
+    REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT payment__details_pay_type_fkey FOREIGN KEY ("pay_type")
-    REFERENCES payment__types ("id")
+    REFERENCES "crm"."payment__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

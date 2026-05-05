@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "crm"."payment__types" (
   "name" text not null,
   "description" text not null,
   constraint payment__types_pkey primary key (id)
-) TABLESPACE pg_default;
+);
 
 ALTER TABLE "crm"."payment__types" OWNER TO "postgres";
 
