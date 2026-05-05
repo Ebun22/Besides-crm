@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS "bms"."document__details" (
     ON UPDATE CASCADE
     ON DELETE CASCADE
   CONSTRAINT document__details_supply_fkey FOREIGN KEY ("supply_details")
-    REFERENCES "bms"."supply__details" ("id")
+    REFERENCES "bms"."supply_point__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

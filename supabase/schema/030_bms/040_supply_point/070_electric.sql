@@ -19,26 +19,26 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
   "potenza"                      numeric(8,2)    NULL,
   "tensione"                     numeric(8,2)    NULL,
   CONSTRAINT supply_point_pkey              PRIMARY KEY ("id"),
-  CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
-    REFERENCES "bms"."negotiation__details" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT supply_point_details_fkey      FOREIGN KEY ("supply_point")
-    REFERENCES "bms"."supply_point__details" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT supply_point_uso_forn_fkey     FOREIGN KEY ("uso_forn")
-    REFERENCES "bms"."product__usage" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT supply_point_off_type_fkey     FOREIGN KEY ("offer_type")
-    REFERENCES "bms"."product__offer_type" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-  CONSTRAINT supply_point_pricing_type_fkey     FOREIGN KEY ("pricing_type")
-    REFERENCES "bms"."product__pricing_type" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
+  -- CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
+  --   REFERENCES "bms"."negotiation__details" ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE,
+  -- CONSTRAINT supply_point_details_fkey      FOREIGN KEY ("supply_point")
+  --   REFERENCES "bms"."supply_point__details" ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE,
+  -- CONSTRAINT supply_point_uso_forn_fkey     FOREIGN KEY ("uso_forn")
+  --   REFERENCES "bms"."product__usage" ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE,
+  -- CONSTRAINT supply_point_off_type_fkey     FOREIGN KEY ("offer_type")
+  --   REFERENCES "bms"."product__offer_type" ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE,
+  -- CONSTRAINT supply_point_pricing_type_fkey     FOREIGN KEY ("pricing_type")
+  --   REFERENCES "bms"."product__pricing_type" ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE
 );
 
 ALTER TABLE "bms"."supply_point__electric" OWNER TO "postgres";

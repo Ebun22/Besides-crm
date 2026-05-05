@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "crm"."company__details" (
   "cf_azienda"      varchar NULL,
   CONSTRAINT company__details_pkey              PRIMARY KEY ("id"),
   CONSTRAINT company__details_tipo_azienda_fkey FOREIGN KEY ("tipo_azienda")
-    REFERENCES company__type ("id")
+    REFERENCES "crm"."company__type" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
