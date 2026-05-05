@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__gas" (
   "consumption_quota_charge" numeric(8,2)    NULL,
   "fixed_fee_charge"         numeric(8,2)    NULL,
   "per_tot"               numeric(8,2)    NULL,
-  CONSTRAINT supply_point_pkey              PRIMARY KEY ("id"),
+  CONSTRAINT supply_point_gas_pkey              PRIMARY KEY ("id")
   -- CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
   --   REFERENCES "bms"."negotiation__details" ("id")
   --   ON UPDATE CASCADE

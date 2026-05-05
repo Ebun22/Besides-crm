@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "bms"."document__details" (
   "doc_issuedate"  bigint    NULL,
   "doc_expdate"    bigint    NULL,
   "uploaded_by"    uuid      NULL,
-  "uploaded_at"    uuid      NULL DEFAULT (EXTRACT(EPOCH FROM now() * 1000))::BIGINT,
+  "uploaded_at"    bigint      NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
   "supply_details" uuid      NULL,
   CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
   CONSTRAINT document__details_type_fkey FOREIGN KEY ("type")
@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS "bms"."document__details" (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT document__details_owner_fkey FOREIGN KEY ("uploaded_by")
-    REFERENCES "bms"."people__details" ("id")
+    REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
   CONSTRAINT document__details_supply_fkey FOREIGN KEY ("supply_details")
     REFERENCES "bms"."supply_point__details" ("id")
     ON UPDATE CASCADE
@@ -32,14 +32,11 @@ REVOKE
 ON TABLE
   "bms"."document__details"
 FROM
-  "anon";
+  "anon",
+  "authenticated";
 
 GRANT
-  SELECT,
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
+  SELECT
 ON TABLE
   "bms"."document__details"
 TO

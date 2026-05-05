@@ -16,13 +16,9 @@ FROM
   "anon";
 
 GRANT
-  SELECT,
-  REFERENCES,
-  TRIGGER,
-  TRUNCATE,
-  MAINTAIN
+  SELECT
 ON TABLE
-  "bms"."permission__actions"
+  "bms"."document__types"
 TO
   "authenticated";
 

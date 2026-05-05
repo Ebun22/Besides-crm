@@ -8,11 +8,11 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__details" (
   "product_type"   uuid       NOT NULL,
   "created_at"     bigint     NOT NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
   "active"         boolean    NOT NULL DEFAULT TRUE,
-  CONSTRAINT supply_point_pkey PRIMARY KEY ("id"),
-  CONSTRAINT supply_point_type_key FOREIGN KEY ("product_type")
-    REFERENCES "bms"."negotiation__operation" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
+  CONSTRAINT supply_point_pkey PRIMARY KEY ("id")
+  -- CONSTRAINT supply_point_type_key FOREIGN KEY ("product_type")
+  --   REFERENCES "bms"."negotiation__operation" ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE
 );
 
 ALTER TABLE "bms"."supply_point__details" OWNER TO "postgres";

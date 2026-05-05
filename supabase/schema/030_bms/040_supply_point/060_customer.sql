@@ -2,15 +2,15 @@ CREATE TABLE IF NOT EXISTS "bms"."people__supply__address" (
   "id"       uuid NOT NULL DEFAULT gen_random_uuid (),
   "supp_ref" uuid NOT NULL,
   "cust_ref" uuid NOT NULL,
-  CONSTRAINT people__supply__address_pkey     PRIMARY KEY ("id"),
-  CONSTRAINT supply__address_ref_fkey           FOREIGN KEY ("supp_ref")
-    REFERENCES supply__address ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT supply__address__cust_ref_fkey FOREIGN KEY ("cust_ref")
-    REFERENCES people__details ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
+  CONSTRAINT people__supply__address_pkey     PRIMARY KEY ("id")
+  -- CONSTRAINT supply__address_ref_fkey           FOREIGN KEY ("supp_ref")
+  --   REFERENCES supply__address ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE,
+  -- CONSTRAINT supply__address__cust_ref_fkey FOREIGN KEY ("cust_ref")
+  --   REFERENCES people__details ("id")
+  --   ON UPDATE CASCADE
+  --   ON DELETE CASCADE
 );
 
 ALTER TABLE "bms"."people__supply__address" OWNER TO "postgres";
@@ -22,7 +22,7 @@ ON TABLE
   "bms"."people__supply__address"
 FROM
   "anon",
-  "authenticated",
+  "authenticated";
 
 GRANT
   ALL

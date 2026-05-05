@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
   "pricing_type"                 uuid            NULL,
   "vendita_ee_quota_consumi_eur" numeric(8,2)    NULL,
   "vendita_ee_quota_fissa_eur"   numeric(8,2)    NULL,
-  "per_tot"                      numeric(8,2)    NULL DEFAULT FALSE,
+  "per_tot"                      numeric(8,2)    NULL,
   "per_F1"                       numeric(8,2)    NULL,
   "per_F2"                       numeric(8,2)    NULL,
   "per_F23"                      numeric(8,2)    NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
   "volume"                       numeric(8,2)    NULL,
   "potenza"                      numeric(8,2)    NULL,
   "tensione"                     numeric(8,2)    NULL,
-  CONSTRAINT supply_point_pkey              PRIMARY KEY ("id"),
+  CONSTRAINT supply_point_ele_pkey              PRIMARY KEY ("id")
   -- CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
   --   REFERENCES "bms"."negotiation__details" ("id")
   --   ON UPDATE CASCADE
