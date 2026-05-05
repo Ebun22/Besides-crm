@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "bms"."product__types" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"        text NOT NULL,
   "description" text     NULL,
-  CONSTRAINT product__usage_cat_pkey PRIMARY KEY ("id")
+  CONSTRAINT product__type_pkey PRIMARY KEY ("id")
 );
 
 ALTER TABLE "bms"."product__types" ENABLE ROW LEVEL SECURITY;
