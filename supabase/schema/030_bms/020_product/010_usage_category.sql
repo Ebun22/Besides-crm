@@ -5,13 +5,13 @@ CREATE TABLE IF NOT EXISTS "bms"."product__usage_categories" (
   CONSTRAINT product__usage_cat_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "crm"."product__usage_categories" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__usage_categories" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "crm"."product__usage_categories"
+  "bms"."product__usage_categories"
 FROM
   "anon",
   "authenticated";
@@ -19,17 +19,17 @@ FROM
 GRANT
   SELECT
 ON TABLE
-  "crm"."product__usage_categories"
+  "bms"."product__usage_categories"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "crm"."product__usage_categories" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__usage_categories" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
-  "Enable read access for all users"
+  "Enable read access for auth users"
 ON
-  "crm"."product__usage_categories"
+  "bms"."product__usage_categories"
 FOR SELECT
 TO
   "authenticated"
@@ -38,7 +38,7 @@ USING (
 );
 
 -- SEED
-INSERT INTO "crm"."product__usage_categories" (
+INSERT INTO "bms"."product__usage_categories" (
   "name",
   "description"
 )
