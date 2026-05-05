@@ -1,17 +1,16 @@
-CREATE TABLE IF NOT EXISTS "bms"."product__types" (
+CREATE TABLE IF NOT EXISTS "bms"."negotiation__sector" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"        text NOT NULL,
-  "description" text     NULL,
   CONSTRAINT product__type_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "bms"."product__types" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."negotiation__sector" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "bms"."product__types"
+  "bms"."negotiation__sector"
 FROM
   "anon",
   "authenticated";
@@ -19,17 +18,17 @@ FROM
 GRANT
   SELECT
 ON TABLE
-  "bms"."product__types"
+  "bms"."negotiation__sector"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "bms"."product__types" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."negotiation__sector" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
   "Enable read access for auth users"
 ON
-  "bms"."product__types"
+  "bms"."negotiation__sector"
 FOR SELECT
 TO
   "authenticated"
@@ -38,11 +37,11 @@ USING (
 );
 
 -- SEED
-INSERT INTO "bms"."product__types" (
+INSERT INTO "bms"."negotiation__sector" (
   "name",
   "description"
 )
 VALUES
-  ('Electric',          NULL),
-  ('Gas',               NULL),
+  ('Energy',            NULL),
   ('Telecommunication', NULL);
+  ('Others',            NULL);
