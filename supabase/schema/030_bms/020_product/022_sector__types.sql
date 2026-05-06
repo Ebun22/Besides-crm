@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "bms"."product__sector__types" (
   "name"          text NOT NULL,
   "parent_sector" uuid NOT NULL,
   "description"   text     NULL,
-  CONSTRAINT product__type_pkey PRIMARY KEY ("id")
+  CONSTRAINT product__sector_type_pkey PRIMARY KEY ("id")
 );
 
 ALTER TABLE "bms"."product__sector__types" ENABLE ROW LEVEL SECURITY;
