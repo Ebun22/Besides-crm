@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS "bms"."product__operazione" (
-  "id"           uuid    NOT NULL DEFAULT gen_random_uuid (),
-  "name"         text    NOT NULL,
-  "sub_category" boolean NOT NULL DEFAULT FALSE,
-  "description"  text        NULL,
+  "id"          uuid    NOT NULL DEFAULT gen_random_uuid (),
+  "name"        text    NOT NULL,
+  "subcategory" boolean NOT NULL DEFAULT FALSE,
+  "description" text        NULL,
   CONSTRAINT product__operazione_pkey PRIMARY KEY ("id")
 );
 
@@ -41,7 +41,7 @@ USING (
 -- SEED
 INSERT INTO "bms"."product__operazione" (
   "name",
-  "sub_category",
+  "subcategory",
   "description",
 )
 VALUES

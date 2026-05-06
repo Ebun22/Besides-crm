@@ -11,17 +11,33 @@ CREATE TABLE IF NOT EXISTS "bms"."negotiation__details__details" (
   "status"                 uuid         NOT NULL,
   "cons_note"              varchar(256)     NULL,
   "created_at"             bigint       NOT NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
-  CONSTRAINT negotiation__details_pkey           PRIMARY KEY ("id")
-  CONSTRAINT negotiation__details_opened_by_fkey FOREIGN KEY ("opened_by")
+  CONSTRAINT negotiation__details_pkey              PRIMARY KEY ("id"),
+  CONSTRAINT negotiation__details_opened_by_fkey    FOREIGN KEY ("opened_by")
     REFERENCES "auth"."users" ("id")
     ON UPDATE CASCADE
-    ON DELETE CASCADE
-  CONSTRAINT negotiation__details_settore_fkey   FOREIGN KEY ("settore")
-    REFERENCES "bms"."negotiation__operation" ("id")
+    ON DELETE CASCADE,
+  CONSTRAINT negotiation__details_settore_fkey      FOREIGN KEY ("settore")
+    REFERENCES "bms"."product__settore" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT negotiation__tipo_lavorazione_fkey     FOREIGN KEY ("tipo_lavorazione")
+    REFERENCES "bms"."negotiation__tipo_lavorazione" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT negotiation__details_tipo_cliente_fkey FOREIGN KEY ("tipo_cliente")
+    REFERENCES "bms"."negotiation__tipo_cliente" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT negotiation__details_operazione_fkey FOREIGN KEY ("operazione")
+    REFERENCES "bms"."negotiation__operazione" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
-  CONSTRAINT negotiation__details_type_key FOREIGN KEY ("product_type")
-    REFERENCES "bms"."negotiation__operation" ("id")
+  CONSTRAINT negotiation__details_operazione_subcategory_fkey FOREIGN KEY ("operazione_subcategory")
+    REFERENCES "bms"."negotiation__operazione_subcategory" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+  CONSTRAINT negotiation__details_tipo_cliente_fkey FOREIGN KEY ("tipo_cliente")
+    REFERENCES "bms"."negotiation__tipo_cliente" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

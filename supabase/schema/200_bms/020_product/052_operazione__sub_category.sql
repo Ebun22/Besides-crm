@@ -1,18 +1,18 @@
-CREATE TABLE IF NOT EXISTS "bms"."product__operazione__sub_category" (
+CREATE TABLE IF NOT EXISTS "bms"."product__operazione__subcategory" (
   "id"              uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"            text NOT NULL,
   "parent_category" uuid NOT NULL,
   "description"     text     NULL,
-  CONSTRAINT product__operazione__sub_category_pkey PRIMARY KEY ("id")
+  CONSTRAINT product__operazione__subcategory_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "bms"."product__operazione__sub_category" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__operazione__subcategory" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "bms"."product__operazione__sub_category"
+  "bms"."product__operazione__subcategory"
 FROM
   "anon",
   "authenticated";
@@ -20,17 +20,17 @@ FROM
 GRANT
   SELECT
 ON TABLE
-  "bms"."product__operazione__sub_category"
+  "bms"."product__operazione__subcategory"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "bms"."product__operazione__sub_category" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__operazione__subcategory" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
   "Enable read access for auth users"
 ON
-  "bms"."product__operazione__sub_category"
+  "bms"."product__operazione__subcategory"
 FOR SELECT
 TO
   "authenticated"
@@ -39,7 +39,7 @@ USING (
 );
 
 -- SEED
-INSERT INTO "bms"."product__operazione__sub_category" (
+INSERT INTO "bms"."product__operazione__subcategory" (
   "name",
   "parent_category",
   "description",
