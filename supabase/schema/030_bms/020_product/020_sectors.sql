@@ -1,16 +1,16 @@
-CREATE TABLE IF NOT EXISTS "bms"."product__sector" (
+CREATE TABLE IF NOT EXISTS "bms"."product__sectors" (
   "id"   uuid NOT NULL DEFAULT gen_random_uuid (),
   "name" text NOT NULL,
-  CONSTRAINT product__sector_pkey PRIMARY KEY ("id")
+  CONSTRAINT product__sectors_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "bms"."product__sector" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__sectors" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "bms"."product__sector"
+  "bms"."product__sectors"
 FROM
   "anon",
   "authenticated";
@@ -18,17 +18,17 @@ FROM
 GRANT
   SELECT
 ON TABLE
-  "bms"."product__sector"
+  "bms"."product__sectors"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "bms"."product__sector" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__sectors" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
   "Enable read access for auth users"
 ON
-  "bms"."product__sector"
+  "bms"."product__sectors"
 FOR SELECT
 TO
   "authenticated"
@@ -37,7 +37,7 @@ USING (
 );
 
 -- SEED
-INSERT INTO "bms"."product__sector" (
+INSERT INTO "bms"."product__sectors" (
   "name",
   "description"
 )

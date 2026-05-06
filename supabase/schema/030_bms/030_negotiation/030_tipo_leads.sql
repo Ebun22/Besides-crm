@@ -1,17 +1,17 @@
-CREATE TABLE IF NOT EXISTS "bms"."negotiation__tipo_lead" (
+CREATE TABLE IF NOT EXISTS "bms"."negotiation__tipo_leads" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"        text NOT NULL,
   "description" text     NULL,
-  CONSTRAINT negotiation__tipo_lead_pkey PRIMARY KEY ("id")
+  CONSTRAINT negotiation__tipo_leads_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "bms"."negotiation__tipo_lead" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."negotiation__tipo_leads" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "bms"."negotiation__tipo_lead"
+  "bms"."negotiation__tipo_leads"
 FROM
   "anon",
   "authenticated";
@@ -19,17 +19,17 @@ FROM
 GRANT
   SELECT
 ON TABLE
-  "bms"."negotiation__tipo_lead"
+  "bms"."negotiation__tipo_leads"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "bms"."negotiation__tipo_lead" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."negotiation__tipo_leads" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
   "Enable read access for auth users"
 ON
-  "bms"."negotiation__tipo_lead"
+  "bms"."negotiation__tipo_leads"
 FOR SELECT
 TO
   "authenticated"
@@ -38,7 +38,7 @@ USING (
 );
 
 -- SEED
-INSERT INTO "bms"."negotiation__tipo_lead" (
+INSERT INTO "bms"."negotiation__tipo_leads" (
   "name",
   "description"
 )
