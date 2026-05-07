@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS "bms"."document__details" (
   "file_path"             text     NULL,
   "type"                  uuid     NULL,
   "periodo_fatturazione"  bigint   NULL,
-  "product_details"       uuid     NULL,
   "negotiation"           uuid     NULL,
   "uploaded_at"           bigint   NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
   CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
