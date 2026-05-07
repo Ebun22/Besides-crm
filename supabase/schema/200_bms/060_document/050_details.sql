@@ -31,7 +31,10 @@ FROM
   "authenticated";
 
 GRANT
-  SELECT
+  SELECT,
+  INSERT,
+  UPDATE,
+  DELETE
 ON TABLE
   "bms"."document__details"
 TO
