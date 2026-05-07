@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "bms"."negotiation__status" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"        text NOT NULL,
   "description" text     NULL,
-  CONSTRAINT product__usage_categories_pkey PRIMARY KEY ("id")
+  CONSTRAINT negotiation__status_pkey PRIMARY KEY ("id")
 );
 
 ALTER TABLE "bms"."negotiation__status" ENABLE ROW LEVEL SECURITY;

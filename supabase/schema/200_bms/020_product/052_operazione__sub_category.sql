@@ -1,18 +1,18 @@
-CREATE TABLE IF NOT EXISTS "bms"."product__operazione__subcategory" (
+CREATE TABLE IF NOT EXISTS "bms"."product__operazione_subcategory" (
   "id"              uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"            text NOT NULL,
   "parent_category" uuid NOT NULL,
   "description"     text     NULL,
-  CONSTRAINT product__operazione__subcategory_pkey PRIMARY KEY ("id")
+  CONSTRAINT product__operazione_subcategory_pkey PRIMARY KEY ("id")
 );
 
-ALTER TABLE "bms"."product__operazione__subcategory" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__operazione_subcategory" ENABLE ROW LEVEL SECURITY;
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "bms"."product__operazione__subcategory"
+  "bms"."product__operazione_subcategory"
 FROM
   "anon",
   "authenticated";
@@ -20,17 +20,17 @@ FROM
 GRANT
   SELECT
 ON TABLE
-  "bms"."product__operazione__subcategory"
+  "bms"."product__operazione_subcategory"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "bms"."product__operazione__subcategory" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."product__operazione_subcategory" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY
   "Enable read access for auth users"
 ON
-  "bms"."product__operazione__subcategory"
+  "bms"."product__operazione_subcategory"
 FOR SELECT
 TO
   "authenticated"
@@ -39,10 +39,10 @@ USING (
 );
 
 -- SEED
-INSERT INTO "bms"."product__operazione__subcategory" (
+INSERT INTO "bms"."product__operazione_subcategory" (
   "name",
   "parent_category",
-  "description",
+  "description"
 )
 VALUES
   ('Switch with concurrent transfer of ownership', (SELECT id FROM "bms"."product__operazione" WHERE "name" = 'Extra Switch'), NULL),

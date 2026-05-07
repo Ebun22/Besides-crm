@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS "bms"."product__origin_market" (
-  "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
-  "name"        text NOT NULL,
-  "sector_type" uuid NOT NULL,
-  "description" text     NULL,
+  "id"           uuid NOT NULL DEFAULT gen_random_uuid (),
+  "name"         text NOT NULL,
+  "settore_type" uuid NOT NULL,
+  "description"  text     NULL,
   CONSTRAINT product__origin_market_pkey PRIMARY KEY ("id")
 );
 
@@ -41,13 +41,13 @@ USING (
 -- SEED
 INSERT INTO "bms"."product__origin_market" (
   "name",
-  "sector_type"
+  "settore_type",
   "description"
 )
 VALUES
   ('Free',                             (SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Gas'),      NULL),
-  ('Fornitore di Ultima Istanza (FUI)',(SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Gas'),      NULL);
+  ('Fornitore di Ultima Istanza (FUI)',(SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Gas'),      NULL),
   ('Free',                             (SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Electric'), NULL),
   ('Gradual Protections Service',      (SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Electric'), NULL),
   ('Standard Offer Service',           (SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Electric'), NULL),
-  ('Safeguard Service',                (SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Electric'), NULL),
+  ('Safeguard Service',                (SELECT id FROM "bms"."product__settore___types" WHERE "name" = 'Electric'), NULL);

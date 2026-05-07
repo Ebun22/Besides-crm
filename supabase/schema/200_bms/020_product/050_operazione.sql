@@ -42,7 +42,7 @@ USING (
 INSERT INTO "bms"."product__operazione" (
   "name",
   "subcategory",
-  "description",
+  "description"
 )
 VALUES
   ('Switch-in',       FALSE, NULL),

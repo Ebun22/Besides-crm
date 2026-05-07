@@ -29,15 +29,15 @@ CREATE TABLE IF NOT EXISTS "bms"."negotiation__details" (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT negotiation__details_operazione_fkey   FOREIGN KEY ("operazione")
-    REFERENCES "bms"."negotiation__operazione" ("id")
+    REFERENCES "bms"."product__operazione" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT negotiation__details_operazione_subcategory_fkey FOREIGN KEY ("operazione_subcategory")
-    REFERENCES "bms"."negotiation__operazione_subcategory" ("id")
+    REFERENCES "bms"."product__operazione_subcategory" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT negotiation__details_state_fkey                  FOREIGN KEY ("state")
-    REFERENCES "bms"."negotiation__state" ("id")
+    REFERENCES "bms"."negotiation__states" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT negotiation__details_status_fkey                 FOREIGN KEY ("tipo_cliente")

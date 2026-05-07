@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "bms"."product__settore___types" (
   "id"            uuid NOT NULL DEFAULT gen_random_uuid (),
   "name"          text NOT NULL,
-  "parent_sector" uuid NOT NULL,
+  "parent_settore" uuid NOT NULL,
   "description"   text     NULL,
   CONSTRAINT product__settore__type_pkey PRIMARY KEY ("id")
 );
@@ -41,9 +41,9 @@ USING (
 -- SEED
 INSERT INTO "bms"."product__settore___types" (
   "name",
-  "parent_sector",
+  "parent_settore",
   "description"
 )
 VALUES
-  ('Electric', (SELECT id FROM "bms"."product__sector" WHERE "name" = 'Energy'), NULL),
-  ('Gas',      (SELECT id FROM "bms"."product__sector" WHERE "name" = 'Energy'), NULL);
+  ('Electric', (SELECT id FROM "bms"."product__settore" WHERE "name" = 'Energy'), NULL),
+  ('Gas',      (SELECT id FROM "bms"."product__settore" WHERE "name" = 'Energy'), NULL);

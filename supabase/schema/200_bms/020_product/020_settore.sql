@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "bms"."product__settore" (
-  "id"   uuid NOT NULL DEFAULT gen_random_uuid (),
-  "name" text NOT NULL,
+  "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
+  "name"        text NOT NULL,
+  "description" text     NULL,
   CONSTRAINT product__settore_pkey PRIMARY KEY ("id")
 );
 
@@ -43,5 +44,5 @@ INSERT INTO "bms"."product__settore" (
 )
 VALUES
   ('Energy',            NULL),
-  ('Telecommunication', NULL);
+  ('Telecommunication', NULL),
   ('Others',            NULL);

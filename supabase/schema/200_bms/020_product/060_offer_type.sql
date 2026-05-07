@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "bms"."product__offer_types" (
-  "id"   uuid NOT NULL DEFAULT gen_random_uuid (),
-  "name" text NOT NULL,
+  "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
+  "name"        text NOT NULL,
+  "description" text     NULL,
   CONSTRAINT product__offer_types_pkey PRIMARY KEY ("id")
 );
 
@@ -43,5 +44,5 @@ INSERT INTO "bms"."product__offer_types" (
 )
 VALUES
   ('Fixed price',    NULL),
-  ('Variable price', NULL);
+  ('Variable price', NULL),
   ('Other',          NULL);
