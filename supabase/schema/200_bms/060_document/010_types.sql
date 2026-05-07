@@ -49,7 +49,6 @@ INSERT INTO "bms"."document__types"
   "description"
 )
 VALUES
-  ('virtual_bill',       NULL),
-  ('prev_virtual_bill',  NULL),
-  ('GDPR',               NULL),
-  ('IDENTIFICATION_DOC', NULL);
+  ('INVOICE',       NULL),
+  ('PROOF OF ENTITLEMENT',  NULL),
+  ('PREVIOUS INVOICE',               NULL);

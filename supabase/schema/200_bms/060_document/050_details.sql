@@ -1,23 +1,18 @@
 CREATE TABLE IF NOT EXISTS "bms"."document__details" (
-  "id"             uuid  NOT NULL DEFAULT gen_random_uuid (),
-  "file_path"      text      NULL,
-  "type"           uuid      NULL,
-  "doc_issuedate"  bigint    NULL,
-  "doc_expdate"    bigint    NULL,
-  "uploaded_by"    uuid      NULL,
-  "uploaded_at"    bigint      NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
-  "supply_details" uuid      NULL,
+  "id"                    uuid NOT NULL DEFAULT gen_random_uuid (),
+  "file_path"             text     NULL,
+  "type"                  uuid     NULL,
+  "periodo_fatturazione"  bigint   NULL,
+  "product_details"       uuid     NULL,
+  "negotiation"           uuid     NULL,
+  "uploaded_at"           bigint   NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
   CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
   CONSTRAINT document__details_type_fkey FOREIGN KEY ("type")
     REFERENCES "bms"."document__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT document__details_owner_fkey FOREIGN KEY ("uploaded_by")
-    REFERENCES "crm"."people__details" ("id")
-    ON UPDATE CASCADE
-    ON DELETE CASCADE,
-  CONSTRAINT document__details_supply_fkey FOREIGN KEY ("supply_details")
-    REFERENCES "bms"."supply_point__details" ("id")
+  CONSTRAINT document__details_owner_fkey FOREIGN KEY ("negotiation")
+    REFERENCES "crm"."negotiation__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
