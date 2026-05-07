@@ -1,8 +1,8 @@
-CREATE TABLE IF NOT EXISTS "bms"."negotiation__details__details" (
+CREATE TABLE IF NOT EXISTS "bms"."negotiation__details" (
   "id"                     uuid         NOT NULL DEFAULT gen_random_uuid (),
   "opened_by"              uuid             NULL,
   "settore"                uuid             NULL,
-  "tipo_lavorazione"       uuid             NULL,
+  "tipo_lead"              uuid             NULL,
   "tipo_cliente"           uuid             NULL,
   "canale"                 text             NULL,
   "operazione"             uuid             NULL,
@@ -20,35 +20,39 @@ CREATE TABLE IF NOT EXISTS "bms"."negotiation__details__details" (
     REFERENCES "bms"."product__settore" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT negotiation__tipo_lavorazione_fkey     FOREIGN KEY ("tipo_lavorazione")
-    REFERENCES "bms"."negotiation__tipo_lavorazione" ("id")
+  CONSTRAINT negotiation__tipo_lead_fkey            FOREIGN KEY ("tipo_lead")
+    REFERENCES "bms"."negotiation__tipo_lead" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT negotiation__details_tipo_cliente_fkey FOREIGN KEY ("tipo_cliente")
     REFERENCES "bms"."negotiation__tipo_cliente" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT negotiation__details_operazione_fkey FOREIGN KEY ("operazione")
+  CONSTRAINT negotiation__details_operazione_fkey   FOREIGN KEY ("operazione")
     REFERENCES "bms"."negotiation__operazione" ("id")
     ON UPDATE CASCADE
-    ON DELETE CASCADE
+    ON DELETE CASCADE,
   CONSTRAINT negotiation__details_operazione_subcategory_fkey FOREIGN KEY ("operazione_subcategory")
     REFERENCES "bms"."negotiation__operazione_subcategory" ("id")
     ON UPDATE CASCADE
-    ON DELETE CASCADE
-  CONSTRAINT negotiation__details_tipo_cliente_fkey FOREIGN KEY ("tipo_cliente")
-    REFERENCES "bms"."negotiation__tipo_cliente" ("id")
+    ON DELETE CASCADE,
+  CONSTRAINT negotiation__details_state_fkey                  FOREIGN KEY ("state")
+    REFERENCES "bms"."negotiation__state" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT negotiation__details_status_fkey                 FOREIGN KEY ("tipo_cliente")
+    REFERENCES "bms"."negotiation__status" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
-ALTER TABLE "bms"."negotiation__details__details" OWNER TO "postgres";
+ALTER TABLE "bms"."negotiation__details" OWNER TO "postgres";
 
 -- CLS
 REVOKE
   ALL
 ON TABLE
-  "bms"."negotiation__details__details"
+  "bms"."negotiation__details"
 FROM
   "anon",
   "authenticated";
@@ -59,16 +63,16 @@ GRANT
   UPDATE,
   DELETE
 ON TABLE
-  "bms"."negotiation__details__details"
+  "bms"."negotiation__details"
 TO
   "authenticated";
 
 -- RLS
-ALTER TABLE "bms"."negotiation__details__details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "bms"."negotiation__details" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Enable read access for all users"
 ON
-  "bms"."negotiation__details__details"
+  "bms"."negotiation__details"
 FOR SELECT
 TO
   "authenticated"
@@ -78,7 +82,7 @@ USING (
 
 CREATE POLICY "Enable insert for authenticated users only"
 ON
-  "bms"."negotiation__details__details"
+  "bms"."negotiation__details"
 FOR INSERT
 TO
   "authenticated"
