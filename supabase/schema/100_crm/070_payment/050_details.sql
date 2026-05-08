@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS "crm"."payment__details" (
   "id"                 uuid NOT NULL DEFAULT gen_random_uuid (),
-  "cust_ref"           uuid     NULL DEFAULT gen_random_uuid (),
   "pay_type"           uuid     NULL,
   "cc_cognome"         text     NULL,
   "cc_nome"            text     NULL,

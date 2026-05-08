@@ -2,9 +2,6 @@ CREATE TABLE IF NOT EXISTS "public"."iban__logs" (
   "id"              uuid NOT NULL DEFAULT gen_random_uuid (),
   "payment"         uuid NOT NULL,
   "iban_api_status" uuid     NULL,
-  "iban_bank_name"  text     NULL,
-  "iban_bic"        bigint   NULL,
-  "iban_country"    text     NULL,
   CONSTRAINT iban_logs_pkey primary key ("id"),
   CONSTRAINT iban__logs_iban_api_status_fkey FOREIGN KEY ("iban_api_status")
     REFERENCES "public"."iban__status" ("id")
