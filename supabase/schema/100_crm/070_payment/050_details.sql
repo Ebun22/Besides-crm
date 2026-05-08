@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS "crm"."payment__details" (
   "id"                 uuid NOT NULL DEFAULT gen_random_uuid (),
-  "pay_type"           uuid     NULL,
+  "type"               uuid     NULL,
+  "customer"           uuid     NULL,
   "cc_cognome"         text     NULL,
   "cc_nome"            text     NULL,
   "pag_codfisc"        text     NULL,
@@ -8,11 +9,11 @@ CREATE TABLE IF NOT EXISTS "crm"."payment__details" (
   "cc_tit_birth_date"  bigint   NULL,
   "cc_tit_sex"         varchar  NULL,
   CONSTRAINT payment_details_pkey            PRIMARY KEY ("id"),
-  CONSTRAINT payment__details_customer_fkey  FOREIGN KEY ("cust_ref")
+  CONSTRAINT payment__details_customer_fkey  FOREIGN KEY ("customer")
     REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT payment__details_pay_type_fkey FOREIGN KEY ("pay_type")
+  CONSTRAINT payment__details_pay_type_fkey FOREIGN KEY ("type")
     REFERENCES "crm"."payment__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE

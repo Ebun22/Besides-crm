@@ -6,16 +6,16 @@ CREATE TABLE IF NOT EXISTS "crm"."payment__iban" (
   "bic"       bigint   NULL,
   "country"   text     NULL,
   CONSTRAINT payment_details_pkey            PRIMARY KEY ("id"),
-  CONSTRAINT payment__details_customer_fkey  FOREIGN KEY ("customer")
+  CONSTRAINT payment__iban_customer_fkey  FOREIGN KEY ("customer")
     REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT payment__details_pay_type_fkey FOREIGN KEY ("payment")
-    REFERENCES "crm"."payment__details" ("id")
+  CONSTRAINT payment__iban_pay_type_fkey FOREIGN KEY ("payment")
+    REFERENCES "crm"."payment__iban" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
-ALTER TABLE "crm"."payment__details" OWNER TO "postgres";
+ALTER TABLE "crm"."payment__iban" OWNER TO "postgres";
 
-ALTER TABLE "crm"."payment__details" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "crm"."payment__iban" ENABLE ROW LEVEL SECURITY;
