@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS "bms"."telecom__details" (
-  "id"           uuid        NOT NULL DEFAULT gen_random_uuid (),
-  "tlc_supplier" varchar(60)     NULL,
-  "tlc_supplier" varchar(60)     NULL,
-  "msisdn"       bigint          NULL,
-  "msisdn"       text            NULL,
+  "id"                    uuid        NOT NULL DEFAULT gen_random_uuid (),
+  "fixed_line_supplier"   varchar(60)     NULL,
+  "mobile_phone_supplier" varchar(60)     NULL,
+  "msisdn"                bigint          NULL,
+  "msisdn"                text            NULL,
   CONSTRAINT telecom__details_pkey PRIMARY KEY ("id")
 );
 

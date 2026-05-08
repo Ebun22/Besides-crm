@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "bms"."document__product" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "product"     uuid NOT NULL,
   "customer"    uuid NOT NULL,
-  CONSTRAINT document__product_pkey PRIMARY KEY ("id")
+  CONSTRAINT document__product_pkey PRIMARY KEY ("id"),
   CONSTRAINT document__product_customer_fkey FOREIGN KEY ("customer")
     REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE

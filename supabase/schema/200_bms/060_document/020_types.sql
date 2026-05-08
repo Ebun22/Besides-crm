@@ -49,6 +49,6 @@ INSERT INTO "bms"."document__types"
   "description"
 )
 VALUES
-  ('INVOICE',       NULL),
-  ('PROOF OF ENTITLEMENT',  NULL),
-  ('PREVIOUS INVOICE',               NULL);
+  ('INVOICE',              NULL),
+  ('PROOF OF ENTITLEMENT', NULL),
+  ('PREVIOUS INVOICE',     NULL);

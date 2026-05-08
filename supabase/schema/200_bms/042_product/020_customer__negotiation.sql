@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "bms"."product__negotiation__customer" (
   "product"     uuid NOT NULL,
   "negotiation" uuid NOT NULL,
   "customer"    uuid NOT NULL,
-  CONSTRAINT product__negotiation__customer_pkey PRIMARY KEY ("id")
+  CONSTRAINT product__negotiation__customer_pkey         PRIMARY KEY ("id"),
   CONSTRAINT product__negotiation__customer_neg_fkey     FOREIGN KEY ("negotiation")
     REFERENCES "bms"."negotiation__details" ("id")
     ON UPDATE CASCADE
