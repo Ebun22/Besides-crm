@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS "bms"."event__details" (
     REFERENCES "bms"."event__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT event__details_triggered_by_fkey FOREIGN KEY ("negotiation")
+  CONSTRAINT event__details_triggered_by_fkey FOREIGN KEY ("triggered_by")
     REFERENCES "auth"."users" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE

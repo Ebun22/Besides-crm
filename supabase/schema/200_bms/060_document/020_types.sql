@@ -32,7 +32,7 @@ TO
 -- RLS
 ALTER TABLE "bms"."document__types" ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Enable read access for all users"
+CREATE POLICY "Enable read access on bms docs for auth users"
 ON
   "bms"."document__types"
 FOR SELECT

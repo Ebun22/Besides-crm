@@ -1,10 +1,10 @@
 CREATE TABLE IF NOT EXISTS "bms"."document__product" (
-  "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
-  "product"     uuid NOT NULL,
-  "customer"    uuid NOT NULL,
+  "id"       uuid NOT NULL DEFAULT gen_random_uuid (),
+  "document" uuid NOT NULL,
+  "product"  uuid NOT NULL,
   CONSTRAINT document__product_pkey PRIMARY KEY ("id"),
-  CONSTRAINT document__product_customer_fkey FOREIGN KEY ("customer")
-    REFERENCES "crm"."people__details" ("id")
+  CONSTRAINT document__product_doc_fkey FOREIGN KEY ("document")
+    REFERENCES "bms"."document__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
@@ -41,7 +41,7 @@ WITH CHECK (
   true
 );
 
-CREATE POLICY "Enable read access for all users"
+CREATE POLICY "Enable read access for auth users"
 ON
   "bms"."document__product"
 FOR SELECT

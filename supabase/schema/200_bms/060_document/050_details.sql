@@ -3,15 +3,20 @@ CREATE TABLE IF NOT EXISTS "bms"."document__details" (
   "file_path"             text     NULL,
   "type"                  uuid     NULL,
   "periodo_fatturazione"  bigint   NULL,
-  "negotiation"           uuid     NULL,
+  "negotiation"           uuid NOT NULL,
+  "customer"              uuid NOT NULL,
   "uploaded_at"           bigint   NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
   CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
   CONSTRAINT document__details_type_fkey FOREIGN KEY ("type")
     REFERENCES "bms"."document__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT document__details_owner_fkey FOREIGN KEY ("negotiation")
-    REFERENCES "crm"."negotiation__details" ("id")
+  CONSTRAINT document__details_negotiation_fkey FOREIGN KEY ("negotiation")
+    REFERENCES "bms"."negotiation__details" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT documen_owner_fkey                 FOREIGN KEY ("customer")
+    REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
@@ -48,7 +53,7 @@ TO
 
 -- RLS
 CREATE POLICY
-  "Enable read access for all users"
+  "Enable read access on bms docs for auth users"
 ON
   "bms"."document__details"
 FOR SELECT
@@ -59,7 +64,7 @@ USING (
 );
 
 CREATE POLICY
-  "Enable insert for authenticated users only"
+  "Enable insert on bms docs for  authenticated users only"
 ON
   "bms"."document__details"
 FOR INSERT
