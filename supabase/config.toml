@@ -116,7 +116,7 @@ file_size_limit = "50MiB"
 # public = false
 # file_size_limit = "50MiB"
 # allowed_mime_types = ["image/png", "image/jpeg"]
-# objects_path = "./images"
+# objects_path = "/Users/mac/Documents/Besides/docs"
 
 # Allow connections via S3 compatible clients
 [storage.s3_protocol]

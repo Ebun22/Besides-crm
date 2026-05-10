@@ -1,10 +1,11 @@
 {
-  "include": ["src/**/*", "tests/**/*", "supabase/**/*", "migrate.ts", "env/**/*"],
+  "include": ["src/**/*", "tests/**/*", "supabase/**/*", "migrate.ts", "env/**/*", "src/App.tsx"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "es2022",
-    "moduleResolution": "module",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
     "paths": {
       "@env/*" : ["./env/*"]
     },
