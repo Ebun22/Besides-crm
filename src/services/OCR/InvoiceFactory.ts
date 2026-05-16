@@ -4,11 +4,11 @@ import {
   type DataConfidence,
 } from './confidence';
 import { detectInvoiceType } from './detectType';
-import { extractElectric, type electric_data } from './electricPatterns';
+import { extractElectric} from './electricPatterns';
 import { extractTextFromPdf } from './extractText';
-import { extractGas, type gas_data } from './gasPatterns';
+import { extractGas} from './gasPatterns';
 import { type InvoiceType } from './types/invoiceTypes';
-import { type OCR_result } from './types/OCR_results';
+import { type electric_data, type gas_data, type OCR_result } from './types/OCR_results';
 
 export type BuildResult =
   | {
@@ -25,7 +25,7 @@ export type BuildResult =
   | { ok: false; error: 'unknown invoice type' };
 
 export class InvoiceFactory {
-  private type: InvoiceType             = 'unknown';
+  private type: InvoiceType              = 'unknown';
   private electric: electric_data | null = null;
   private gas: gas_data | null           = null;
 

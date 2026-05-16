@@ -1,5 +1,4 @@
-import type { electric_data } from './electricPatterns';
-import type { gas_data } from './gasPatterns';
+import type { electric_data, gas_data } from "./types/OCR_results";
 
 export type FieldStatus = 'ok' | 'missing';
 
