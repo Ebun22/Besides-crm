@@ -3,6 +3,7 @@ import { parseItNumber } from './numbers.js';
 
 const PDR_RE                    = /Codice PDR:?\s*(\d{14})/i;
 const BILLING_PERIOD_RE         = /(?:Periodo di competenza|Periodo di Fatturazione):?\s*(\d{2}[./-]\d{2}[./-]\d{4})\s*[-–]\s*(\d{2}[./-]\d{2}[./-]\d{4})/i;
+const INVOICE_ISSUE_DATE_RE     = /Emessa il:?\s*(\d{2}\.\d{2}\.\d{4})/i;
 const ANNUAL_CONSUMPTION_RE     = /Consumo annuo:?\s*([\d.,]+)\s*Smc/i;
 const TIPOLOGIA_CLIENTE_RE      = /Tipologia cliente:?\s*([^\n]+)/i;
 const TIPOLOGIA_USO_RE          = /Tipologia d['’]uso:?\s*([^\n]+)/i;
@@ -16,8 +17,7 @@ const GAS_CHARGE_CONSUMPTION_RE = /Spesa per la vendita di gas naturale:?\s*(?:e
 const GAS_FIXED_FEE_RE          = /Quota fissa dovuta in applicazione all['’]offerta:?\s*(?:euro\s*)?([\d.,]+)/i;
 const GAS_CONSUMPTION_PERIOD_RE = /Consumo totale fatturato:?\s*([\d.,]+)\s*Smc/i;
 const TOTAL_AMOUNT_RE           = /TOTALE\s+DA\s+PAGARE\s*[\s\n]+([\d.,]+)/i;
-const INVOICE_ISSUE_DATE_RE     = /Emessa il:?\s*(\d{2}\.\d{2}\.\d{4})/i;
-const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.)/;
+const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)/;
 const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distribuzione)[^:\n]{0,40}:\s*([^\n]+)/i;
 // Imposta erariale at 22% IVA. The Smc volume (6 decimals) sits glued to the EUR amount
 // (2 decimals) in pdf-parse output, so we require the 6-decimal prefix to anchor correctly.

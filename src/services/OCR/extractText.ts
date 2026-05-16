@@ -1,4 +1,4 @@
-import pdfParse from 'pdf-parse/lib/pdf-parse.js';
+import pdfParse from 'pdf-parse';
 
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   const result = await pdfParse(buffer);
