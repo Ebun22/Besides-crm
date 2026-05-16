@@ -21,7 +21,7 @@ const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]
 const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distribuzione)[^:\n]{0,40}:\s*([^\n]+)/i;
 // Imposta erariale at 22% IVA. The Smc volume (6 decimals) sits glued to the EUR amount
 // (2 decimals) in pdf-parse output, so we require the 6-decimal prefix to anchor correctly.
-const INDUSTRIAL_EXCISE_RE = /\d+,\d{6}(\d+,\d{2})\s*22%[\d.,]*\s*Imposta erariale/i;
+const INDUSTRIAL_EXCISE_RE = /(?:Accise e IVA):?\s*(\d+[,.]\d{2})/i;
 
 export function extractGas(text: string): gas_data {
   const data: gas_data = {};
@@ -50,7 +50,9 @@ export function extractGas(text: string): gas_data {
   data.gasConsumption = parseItNumber(text.match(GAS_CONSUMPTION_PERIOD_RE)?.[1]);
   data.totalAmount = parseItNumber(text.match(TOTAL_AMOUNT_RE)?.[1]);
   data.invoiceDate = text.match(INVOICE_ISSUE_DATE_RE)?.[1];
-  data.industrialExciseDuties = parseItNumber(text.match(INDUSTRIAL_EXCISE_RE)?.[1]);
+
+  const parsedIndustrialExcise = parseItNumber(text.match(INDUSTRIAL_EXCISE_RE)?.[1]);
+  data.industrialExciseDuties  = typeof parsedIndustrialExcise === 'number' && !isNaN(parsedIndustrialExcise);
 
   return data;
 }

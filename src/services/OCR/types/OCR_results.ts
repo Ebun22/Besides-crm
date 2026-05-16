@@ -32,13 +32,13 @@ export interface electric_data {
 export interface gas_data {
   pdr?: string;
   invoicePeriod?: invoice_period;
+  invoiceDate?: string;
   supplier?: string;
   localDistributor?: string;
   annualConsumption?: number;
   usageCategories?: string;
   meterSerialNumber?: string;
   remi?: string;
-  industrialExciseDuties?: number;
   offerType?: string;
   tariffType?: string;
   atecoCode?: string;
@@ -46,8 +46,8 @@ export interface gas_data {
   gasChargeFromConsumption?: number;
   gasChargeFromFixedFee?: number;
   gasConsumption?: number;
-  invoiceDate?: string;
   totalAmount?: number;
+  industrialExciseDuties?: boolean;
 };
 
 export interface OCR_result {

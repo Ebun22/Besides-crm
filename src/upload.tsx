@@ -1,67 +1,17 @@
 import { useState } from 'react';
+import type { band_consumption, electric_data, gas_data, invoice_period } from './services/OCR/types/OCR_results';
 
 const OCR_ENDPOINT =
   import.meta.env.VITE_OCR_ENDPOINT ?? 'http://localhost:3001/api/invoices/extract';
 
-interface InvoicePeriod {
-  from: string;
-  to: string;
-}
-interface BandConsumption {
-  value: number;
-  period?: InvoicePeriod;
-}
-
-interface ElectricData {
-  pod?: string;
-  invoicePeriod?: InvoicePeriod;
-  supplier?: string;
-  localDistributor?: string;
-  annualConsumption?: number;
-  contractedPower?: number;
-  voltageLevel?: string;
-  intendedUse?: string;
-  electricityExpenseFromConsumption?: number;
-  electricityChargeFromFixedAndPower?: number;
-  offerType?: string;
-  tariffType?: string;
-  totalActiveEnergyConsumption?: BandConsumption;
-  bandF1Consumption?: BandConsumption;
-  bandF2Consumption?: BandConsumption;
-  bandF3Consumption?: BandConsumption;
-  invoiceDate?: string;
-  totalAmount?: number;
-}
-
-interface GasData {
-  pdr?: string;
-  invoicePeriod?: InvoicePeriod;
-  supplier?: string;
-  localDistributor?: string;
-  annualConsumption?: number;
-  usageCategories?: string;
-  meterSerialNumber?: string;
-  remi?: string;
-  industrialExciseDuties?: number;
-  offerType?: string;
-  tariffType?: string;
-  atecoCode?: string;
-  atecoCategoryDescription?: string;
-  gasChargeFromConsumption?: number;
-  gasChargeFromFixedFee?: number;
-  gasConsumption?: number;
-  invoiceDate?: string;
-  totalAmount?: number;
-}
-
 interface ExtractedResult {
   type: 'electric' | 'gas' | 'dual';
-  electric: ElectricData | null;
-  gas: GasData | null;
+  electric: electric_data | null;
+  gas: gas_data | null;
 }
 
 const ELECTRIC_FIELDS: Array<{
-  key: keyof ElectricData;
+  key: keyof electric_data;
   label: string;
   type?: 'number' | 'text' | 'period';
 }> = [
@@ -90,7 +40,7 @@ const ELECTRIC_FIELDS: Array<{
 ];
 
 const GAS_FIELDS: Array<{
-  key: keyof GasData;
+  key: keyof gas_data;
   label: string;
   type?: 'number' | 'text';
 }> = [
@@ -101,7 +51,7 @@ const GAS_FIELDS: Array<{
   { key: 'usageCategories', label: "Categorie d'uso" },
   { key: 'meterSerialNumber', label: 'Matricola contatore' },
   { key: 'remi', label: 'Cabina REMI' },
-  { key: 'industrialExciseDuties', label: 'Accise industriali €', type: 'number' },
+  { key: 'industrialExciseDuties', label: 'Accise industriali €'},
   { key: 'offerType', label: 'Tipologia offerta' },
   { key: 'tariffType', label: 'Tipologia prezzo (tariffa)' },
   { key: 'atecoCode', label: 'Codice ATECO' },
@@ -120,11 +70,11 @@ const GAS_FIELDS: Array<{
 function fmt(value: unknown): string {
   if (value === undefined || value === null) return '';
   if (typeof value === 'object' && value !== null && 'from' in value && 'to' in value) {
-    const p = value as InvoicePeriod;
+    const p = value as invoice_period;
     return `${p.from} → ${p.to}`;
   }
   if (typeof value === 'object' && value !== null && 'value' in value) {
-    const b = value as BandConsumption;
+    const b = value as band_consumption;
     const range = b.period ? ` (${b.period.from} → ${b.period.to})` : '';
     return `${b.value}${range}`;
   }
@@ -161,8 +111,8 @@ function SectionElectric({
   data,
   onChange,
 }: {
-  data: ElectricData;
-  onChange: (next: ElectricData) => void;
+  data: electric_data;
+  onChange: (next: electric_data) => void;
 }) {
   return (
     <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded">
@@ -217,8 +167,8 @@ function SectionGas({
   data,
   onChange,
 }: {
-  data: GasData;
-  onChange: (next: GasData) => void;
+  data: gas_data;
+  onChange: (next: gas_data) => void;
 }) {
   return (
     <div className="mt-4 p-4 bg-sky-50 border border-sky-200 rounded">
