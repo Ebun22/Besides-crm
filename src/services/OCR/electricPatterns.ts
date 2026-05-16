@@ -1,35 +1,5 @@
-import { parseItNumber } from './numbers.js';
-
-export interface InvoicePeriod {
-  from: string;
-  to: string;
-}
-
-export interface BandConsumption {
-  value: number;
-  period?: InvoicePeriod;
-}
-
-export interface ElectricData {
-  pod?: string;
-  invoicePeriod?: InvoicePeriod;
-  supplier?: string;
-  localDistributor?: string;
-  annualConsumption?: number;
-  contractedPower?: number;
-  voltageLevel?: string;
-  intendedUse?: string;
-  electricityExpenseFromConsumption?: number;
-  electricityChargeFromFixedAndPower?: number;
-  offerType?: string;
-  tariffType?: string;
-  totalActiveEnergyConsumption?: BandConsumption;
-  bandF1Consumption?: BandConsumption;
-  bandF2Consumption?: BandConsumption;
-  bandF3Consumption?: BandConsumption;
-  invoiceDate?: string;
-  totalAmount?: number;
-}
+import { parseItNumber }      from './numbers.js';
+import { type electric_data } from './types/OCR_results.js';
 
 const POD_RE = /Codice POD:?\s*(IT\d{3}E\d{8})/i;
 const POWER_RE = /Potenza impegnata:?\s*([\d.,]+)\s*kW\b/i;
@@ -64,8 +34,8 @@ function findFatturatiBands(
   return { f0, f1, f2, f3 };
 }
 
-export function extractElectric(text: string): ElectricData {
-  const data: ElectricData = {};
+export function extractElectric(text: string): electric_data {
+  const data: electric_data = {};
 
   data.pod = text.match(POD_RE)?.[1];
 

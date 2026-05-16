@@ -1,4 +1,4 @@
-export type InvoiceType = 'electric' | 'gas' | 'dual' | 'unknown';
+import type { InvoiceType } from "./types/invoiceTypes";
 
 export function detectInvoiceType(text: string): InvoiceType {
   const electric =
