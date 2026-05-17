@@ -5,19 +5,19 @@ const PDR_RE                    = /Codice PDR:?\s*(\d{14})/i;
 const BILLING_PERIOD_RE         = /(?:Periodo di competenza|Periodo di Fatturazione):?\s*(\d{2}[./-]\d{2}[./-]\d{4})\s*[-–]\s*(\d{2}[./-]\d{2}[./-]\d{4})/i;
 const INVOICE_ISSUE_DATE_RE     = /Emessa il:?\s*(\d{2}\.\d{2}\.\d{4})/i;
 const ANNUAL_CONSUMPTION_RE     = /Consumo annuo:?\s*([\d.,]+)\s*Smc/i;
-const TIPOLOGIA_CLIENTE_RE      = /Tipologia cliente:?\s*([^\n]+)/i;
+const INTENDED_USE_RE           = /Tipologia cliente:?\s*([^\n]+)/i;
 const TIPOLOGIA_USO_RE          = /Tipologia d['’]uso:?\s*([^\n]+)/i;
 const METER_NUMBER_RE           = /Matricola contatore:?\s*(\S+)/i;
 const REMI_RE                   = /(?:Cabina di Riduzione e Misura|REMI|Punto di Consegna|Code Re\. Mi\.)[:\s]*([\w\-/]+)/i;
-const OFFER_TYPE_RE             = /Tipologia offerta:?\s*([^\n]+)/i;
-const TARIFF_TYPE_RE            = /Tipologia prezzo offerta:?\s*([^\n]+)/i;
 const ATECO_CODE_RE             = /(?:Codice\s+)?ATECO[^:\n]{0,30}:?\s*(\d{2}\.\d{2}(?:\.\d+)?)/i;
 const ATECO_DESC_RE             = /(?:Descrizione|Attività)\s+ATECO[:\s]*([^\n]+)/i;
+const OFFER_TYPE_RE             = /Tipologia offerta:?\s*([^\n]+)/i;
+const TARIFF_TYPE_RE            = /Tipologia prezzo offerta:?\s*([^\n]+)/i;
 const CONSUMPTION_QUOTE_RE      = /Quota per consumi:?[\s\n]*[\d.,]+\s*Smc\s*(\d+[,.]\d{2})/i;
 const FIXED_FEE_RE              = /Quota fissa:?[\n\s]*[\d.,\s]+\s*Mesi\s*(\d+[,.]\d{2})/i;
 const GAS_CONSUMPTION_PERIOD_RE = /Consumo totale fatturato:?\s*([\d.,]+)\s*Smc/i;
 const TOTAL_AMOUNT_RE           = /TOTALE\s+DA\s+PAGARE\s*[\s\n]+([\d.,]+)/i;
-const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)/;
+const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)/i;
 const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distribuzione)[^:\n]{0,40}:\s*([^\n]+)/i;
 // Imposta erariale at 22% IVA. The Smc volume (6 decimals) sits glued to the EUR amount
 // (2 decimals) in pdf-parse output, so we require the 6-decimal prefix to anchor correctly.
@@ -35,7 +35,7 @@ export function extractGas(text: string): gas_data {
   data.localDistributor = text.match(DISTRIBUTOR_RE)?.[1]?.trim();
   data.annualConsumption = parseItNumber(text.match(ANNUAL_CONSUMPTION_RE)?.[1]);
 
-  const tCliente = text.match(TIPOLOGIA_CLIENTE_RE)?.[1]?.trim();
+  const tCliente = text.match(INTENDED_USE_RE)?.[1]?.trim();
   const tUso = text.match(TIPOLOGIA_USO_RE)?.[1]?.trim();
   data.usageCategories = [tCliente, tUso].filter(Boolean).join(' / ') || undefined;
 
