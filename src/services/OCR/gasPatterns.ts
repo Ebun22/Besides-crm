@@ -19,9 +19,7 @@ const GAS_CONSUMPTION_PERIOD_RE = /Consumo totale fatturato:?\s*([\d.,]+)\s*Smc/
 const TOTAL_AMOUNT_RE           = /TOTALE\s+DA\s+PAGARE\s*[\s\n]+([\d.,]+)/i;
 const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)/i;
 const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distribuzione)[^:\n]{0,40}:\s*([^\n]+)/i;
-// Imposta erariale at 22% IVA. The Smc volume (6 decimals) sits glued to the EUR amount
-// (2 decimals) in pdf-parse output, so we require the 6-decimal prefix to anchor correctly.
-const INDUSTRIAL_EXCISE_RE = /(?:Accise e IVA):?\s*(\d+[,.]\d{2})/i;
+const INDUSTRIAL_EXCISE_RE      = /(?:Accise e IVA):?\s*(\d+[,.]\d{2})/i;
 
 export function extractGas(text: string): gas_data {
   const data: gas_data = {};
