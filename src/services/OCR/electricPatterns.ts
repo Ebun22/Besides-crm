@@ -16,11 +16,9 @@ const FIXED_POWER_RE              = /(?:Quota fissa e quota potenza|Quota fissa)
 const TOTAL_AMOUNT_RE             = /TOTALE\s+DA\s+PAGARE\s*[\s\n]+([\d+[,.]\d{2})/i;
 const DISTRIBUTOR_RE              = /gestito da\s+([A-Z][\w\-]+(?:\s+[\w\-]+){0,3})\s*(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)?/i;
 const SUPPLIER_RE                 = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)/;
-const BAND_F1                     = /F0F1F2F3\s*([\d,]+)/i;
-const BAND_F2                     = /FATTURATI[\s\n]+([\d,]+)/i;
-const BAND_F3                     = /FATTURATI[\s\n]+([\d,]+)/i;
-
-
+const BAND_F1                     = /FATTURATI\s*(\d+[,.]\d{3})/i;
+const BAND_F2                     = /FATTURATI\s*(?:\d+[,.]\d{3})\s*(\d+[,.]\d{3})/i;
+const BAND_F3                     = /FATTURATI\s*(?:\d+[,.]\d{3})\s*(\d+[,.]\d{3})\s*(\d+[,.]\d{3})/i;
 
 export function extractElectric(text: string): electric_data {
   const data: electric_data = {};
@@ -38,26 +36,17 @@ export function extractElectric(text: string): electric_data {
   data.intendedUse = text.match(INTENDED_USE_RE)?.[1]?.trim();
   data.offerType = text.match(OFFER_TYPE_RE)?.[1]?.trim();
   data.tariffType = text.match(TARIFF_TYPE_RE)?.[1]?.trim();
-  data.electricityExpenseFromConsumption = parseItNumber(
-    text.match(CONSUMPTION_QUOTE_RE)?.[1],
-  );
+  data.electricityExpenseFromConsumption = parseItNumber(text.match(CONSUMPTION_QUOTE_RE)?.[1]);
   data.electricityChargeFromFixedAndPower = parseItNumber(text.match(FIXED_POWER_RE)?.[1]);
   data.totalAmount = parseItNumber(text.match(TOTAL_AMOUNT_RE)?.[1]);
-  data.invoiceDate = text.match(INVOICE_ISSUE_DATE_RE)?.[1];
+  data.invoiceDate       = text.match(INVOICE_ISSUE_DATE_RE)?.[1];
+  data.bandF1Consumption = parseItNumber(text.match(BAND_F1)?.[1]);
+  data.bandF2Consumption = parseItNumber(text.match(BAND_F2)?.[1]);
+  data.bandF3Consumption = parseItNumber(text.match(BAND_F3)?.[1]);
 
   const totalActive = parseItNumber(text.match(TOTAL_ACTIVE_CONSUMPTION_RE)?.[1]);
   if (totalActive !== undefined) {
-    data.totalActiveEnergyConsumption = { value: totalActive, period: data.invoicePeriod };
-  }
-
-  const bands = findFatturatiBands(text);
-  if (bands) {
-    if (bands.f1 !== undefined)
-      data.bandF1Consumption = { value: bands.f1, period: data.invoicePeriod };
-    if (bands.f2 !== undefined)
-      data.bandF2Consumption = { value: bands.f2, period: data.invoicePeriod };
-    if (bands.f3 !== undefined)
-      data.bandF3Consumption = { value: bands.f3, period: data.invoicePeriod };
+    data.totalActiveEnergyConsumption = totalActive ?? (Number(data.bandF1Consumption) + Number(data.bandF2Consumption) + Number(data.bandF3Consumption))
   }
 
   return data;

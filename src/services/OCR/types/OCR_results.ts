@@ -3,11 +3,6 @@ export interface invoice_period {
   to: string;
 };
 
-export interface band_consumption {
-  value: number;
-  period?: invoice_period;
-};
-
 export interface electric_data {
   pod?: string;
   invoicePeriod?: invoice_period;
@@ -21,10 +16,10 @@ export interface electric_data {
   electricityChargeFromFixedAndPower?: number;
   offerType?: string;
   tariffType?: string;
-  totalActiveEnergyConsumption?: band_consumption;
-  bandF1Consumption?: band_consumption;
-  bandF2Consumption?: band_consumption;
-  bandF3Consumption?: band_consumption;
+  totalActiveEnergyConsumption?: number;
+  bandF1Consumption?: number;
+  bandF2Consumption?: number;
+  bandF3Consumption?: number;
   invoiceDate?: string;
   totalAmount?: number;
 };
