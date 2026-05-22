@@ -1,5 +1,5 @@
-import { type gas_data } from './types/OCR_results.js';
-import { parseItNumber } from './numbers.js';
+import { gas_data } from '../types/OCR_results.js';
+import { parseItNumber } from '../numbers.js';
 
 const PDR_RE                    = /Codice PDR:?\s*(\d{14})/i;
 const BILLING_PERIOD_RE         = /(?:Periodo di competenza|Periodo di Fatturazione):?\s*(\d{2}[./-]\d{2}[./-]\d{4})\s*[-–]\s*(\d{2}[./-]\d{2}[./-]\d{4})/i;
@@ -22,35 +22,35 @@ const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distri
 const INDUSTRIAL_EXCISE_RE      = /(?:Accise e IVA):?\s*(\d+[,.]\d{2})/i;
 
 export function extractGas(text: string): gas_data {
-  const data: gas_data = {};
+  const data: gas_data = new gas_data();
 
-  data.pdr = text.match(PDR_RE)?.[1];
+  data.pdr = text.match(PDR_RE)?.[1] ?? null;
 
   const period = text.match(BILLING_PERIOD_RE);
-  if (period) data.invoicePeriod = { from: period[1], to: period[2] };
+  if (period) data.billing_period = { from: period[1], to: period[2] };
 
-  data.supplier = text.match(SUPPLIER_RE)?.[1]?.trim();
-  data.localDistributor = text.match(DISTRIBUTOR_RE)?.[1]?.trim();
-  data.annualConsumption = parseItNumber(text.match(ANNUAL_CONSUMPTION_RE)?.[1]);
+  data.supplier = text.match(SUPPLIER_RE)?.[1]?.trim() ?? null;
+  data.local_distributor = text.match(DISTRIBUTOR_RE)?.[1]?.trim() ?? null;
+  data.annual_consumption = parseItNumber(text.match(ANNUAL_CONSUMPTION_RE)?.[1]) ?? null;
 
   const tCliente = text.match(INTENDED_USE_RE)?.[1]?.trim();
   const tUso = text.match(TIPOLOGIA_USO_RE)?.[1]?.trim();
-  data.usageCategories = [tCliente, tUso].filter(Boolean).join(' / ') || undefined;
+  data.usage_categories = [tCliente, tUso].filter(Boolean).join(' / ') || null;
 
-  data.meterSerialNumber = text.match(METER_NUMBER_RE)?.[1]?.trim();
-  data.remi = text.match(REMI_RE)?.[1]?.trim();
-  data.offerType = text.match(OFFER_TYPE_RE)?.[1]?.trim();
-  data.tariffType = text.match(TARIFF_TYPE_RE)?.[1]?.trim();
-  data.atecoCode = text.match(ATECO_CODE_RE)?.[1];
-  data.atecoCategoryDescription = text.match(ATECO_DESC_RE)?.[1]?.trim();
-  data.gasChargeFromConsumption = parseItNumber(text.match(CONSUMPTION_QUOTE_RE)?.[1]);
-  data.gasChargeFromFixedFee = parseItNumber(text.match(FIXED_FEE_RE)?.[1]);
-  data.gasConsumption = parseItNumber(text.match(GAS_CONSUMPTION_PERIOD_RE)?.[1]);
-  data.totalAmount = parseItNumber(text.match(TOTAL_AMOUNT_RE)?.[1]);
-  data.invoiceDate = text.match(INVOICE_ISSUE_DATE_RE)?.[1];
+  data.meter_serial_number = text.match(METER_NUMBER_RE)?.[1]?.trim() ?? null;
+  data.remi = text.match(REMI_RE)?.[1]?.trim() ?? null;
+  data.offer_type = text.match(OFFER_TYPE_RE)?.[1]?.trim() ?? null;
+  data.tariff_type = text.match(TARIFF_TYPE_RE)?.[1]?.trim() ?? null;
+  data.ateco_code = text.match(ATECO_CODE_RE)?.[1] ?? null;
+  data.ateco_category_description = text.match(ATECO_DESC_RE)?.[1]?.trim() ?? null;
+  data.consumption_quote = parseItNumber(text.match(CONSUMPTION_QUOTE_RE)?.[1]) ?? null;
+  data.fixed_gas_quote = parseItNumber(text.match(FIXED_FEE_RE)?.[1]) ?? null;
+  data.gas_consumption = parseItNumber(text.match(GAS_CONSUMPTION_PERIOD_RE)?.[1]) ?? null;
+  data.total_amount = parseItNumber(text.match(TOTAL_AMOUNT_RE)?.[1]) ?? null;
+  data.invoice_issue_date = text.match(INVOICE_ISSUE_DATE_RE)?.[1] ?? null;
 
   const parsedIndustrialExcise = parseItNumber(text.match(INDUSTRIAL_EXCISE_RE)?.[1]);
-  data.industrialExciseDuties  = typeof parsedIndustrialExcise === 'number' && !isNaN(parsedIndustrialExcise);
+  data.industrial_excise_duties = typeof parsedIndustrialExcise === 'number' && !isNaN(parsedIndustrialExcise);
 
   return data;
 }

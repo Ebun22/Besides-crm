@@ -1,14 +1,21 @@
 import {
-  computeElectricConfidence,
-  computeGasConfidence,
+  compute_customer_confidence,
+  compute_electric_confidence,
+  compute_gas_confidence,
   type DataConfidence,
 } from './confidence';
 import { detectInvoiceType } from './detectType';
-import { extractElectric} from './electricPatterns';
+import { extractCustomer } from './patterns/customer';
+import { extract_electric} from './patterns/electric';
 import { extractTextFromPdf } from './extractText';
-import { extractGas} from './gasPatterns';
+import { extractGas} from './patterns/gas';
 import { type InvoiceType } from './types/invoiceTypes';
-import { type electric_data, type gas_data, type OCR_result } from './types/OCR_results';
+import {
+  type customer_data,
+  type electric_data,
+  type gas_data,
+  type OCR_result,
+} from './types/OCR_results';
 
 export type BuildResult =
   | {
@@ -16,8 +23,10 @@ export type BuildResult =
       type  : InvoiceType;
       data  : OCR_result
       error : string | null;
+      customer: customer_data | null;
       electric: electric_data | null;
       gas: gas_data | null;
+      customerConfidence: DataConfidence<customer_data> | null;
       electricConfidence: DataConfidence<electric_data> | null;
       gasConfidence: DataConfidence<gas_data> | null;
     }
@@ -26,6 +35,7 @@ export type BuildResult =
 
 export class InvoiceFactory {
   private type: InvoiceType              = 'unknown';
+  private customer: customer_data | null = null;
   private electric: electric_data | null = null;
   private gas: gas_data | null           = null;
 
@@ -38,6 +48,10 @@ export class InvoiceFactory {
     this.type = v;
   };
 
+  setCustomer(v : customer_data | null) {
+    this.customer = v;
+  };
+
   setElectric(v : electric_data | null) {
     this.electric = v;
   };
@@ -48,6 +62,10 @@ export class InvoiceFactory {
 
   getType() {
     return this.type;
+  };
+
+  getCustomer() {
+    return this.customer;
   };
 
   getElectric() {
@@ -79,8 +97,10 @@ export class InvoiceFactory {
       return { ok: false, error: 'unknown invoice type' };
     }
 
+    this.setCustomer(extractCustomer(text));
+
     if (this.type === 'electric' || this.type === 'dual') {
-      this.setElectric(extractElectric(text));
+      this.setElectric(extract_electric(text));
     }
     if (this.type === 'gas' || this.type === 'dual') {
       this.setGas(extractGas(text));
@@ -89,10 +109,12 @@ export class InvoiceFactory {
     return {
       ok: true,
       type: this.type,
+      customer: this.customer,
       electric: this.electric,
       gas: this.gas,
-      electricConfidence: this.electric ? computeElectricConfidence(this.electric) : null,
-      gasConfidence: this.gas ? computeGasConfidence(this.gas) : null,
+      customerConfidence: this.customer ? compute_customer_confidence(this.customer) : null,
+      electricConfidence: this.electric ? compute_electric_confidence(this.electric) : null,
+      gasConfidence: this.gas ? compute_gas_confidence(this.gas) : null,
     };
   }
 }

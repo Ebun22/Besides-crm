@@ -1,73 +1,35 @@
-import type { electric_data, gas_data } from "./types/OCR_results";
-
-export type FieldStatus = 'ok' | 'missing';
+import type { customer_data, electric_data, gas_data } from "./types/OCR_results";
 
 export interface DataConfidence<T> {
   confidence: number;
-  fields: { [K in keyof T]-?: FieldStatus };
 }
 
-const ELECTRIC_FIELDS: (keyof electric_data)[] = [
-  'pod',
-  'invoicePeriod',
-  'supplier',
-  'localDistributor',
-  'annualConsumption',
-  'contractedPower',
-  'voltageLevel',
-  'intendedUse',
-  'electricityExpenseFromConsumption',
-  'electricityChargeFromFixedAndPower',
-  'offerType',
-  'tariffType',
-  'totalActiveEnergyConsumption',
-  'bandF1Consumption',
-  'bandF2Consumption',
-  'bandF3Consumption',
-  'invoiceDate',
-  'totalAmount',
-];
+function count_present_fields<T extends object>(data: T): { ok: number; total: number } {
+  const keys = Object.keys(data) as (keyof T)[];
 
-const GAS_FIELDS: (keyof gas_data)[] = [
-  'pdr',
-  'invoicePeriod',
-  'supplier',
-  'localDistributor',
-  'annualConsumption',
-  'usageCategories',
-  'meterSerialNumber',
-  'remi',
-  'industrialExciseDuties',
-  'offerType',
-  'tariffType',
-  'atecoCode',
-  'atecoCategoryDescription',
-  'gasChargeFromConsumption',
-  'gasChargeFromFixedFee',
-  'gasConsumption',
-  'invoiceDate',
-  'totalAmount',
-];
+  let present_field = 0;
 
-function score<T extends object>(data: T, keys: (keyof T)[]): DataConfidence<T> {
-  const fields = {} as { [K in keyof T]-?: FieldStatus };
-  let ok = 0;
   for (const k of keys) {
     const v = data[k];
-    const present = v !== undefined && v !== null;
-    fields[k] = present ? 'ok' : 'missing';
-    if (present) ok++;
-  }
-  return {
-    confidence: Math.round((ok / keys.length) * 100),
-    fields,
+    if (v !== undefined && v !== null) present_field++;
   };
-}
 
-export function computeElectricConfidence(data: electric_data): DataConfidence<electric_data> {
-  return score(data, ELECTRIC_FIELDS);
-}
+  return {
+    ok: present_field,
+    total: keys.length
+  };
+};
 
-export function computeGasConfidence(data: gas_data): DataConfidence<gas_data> {
-  return score(data, GAS_FIELDS);
-}
+export function compute_total_confidence_score(
+  customer: customer_data,
+  electric: electric_data,
+  gas: gas_data
+): number {
+  const c = count_present_fields(customer);
+  const e = count_present_fields(electric);
+  const g = count_present_fields(gas);
+  const ok = c.ok + e.ok + g.ok;
+  const total = c.total + e.total + g.total;
+
+  return Math.round((ok / total) * 100);
+};
