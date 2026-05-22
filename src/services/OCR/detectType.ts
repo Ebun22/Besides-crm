@@ -1,6 +1,6 @@
-import type { InvoiceType } from "./types/invoiceTypes";
+import type { invoice_type } from "./types/invoiceTypes";
 
-export function detectInvoiceType(text: string): InvoiceType {
+export function detectInvoiceType(text: string): invoice_type {
   const electric =
     /Servizio:\s*Energia Elettrica/i.test(text) ||
     /Codice POD\s*:/i.test(text) ||

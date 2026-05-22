@@ -1,7 +1,5 @@
 import {
-  compute_customer_confidence,
-  compute_electric_confidence,
-  compute_gas_confidence,
+  compute_total_confidence_score,
   type DataConfidence,
 } from './confidence';
 import { detectInvoiceType } from './detectType';
@@ -9,32 +7,19 @@ import { extractCustomer } from './patterns/customer';
 import { extract_electric} from './patterns/electric';
 import { extractTextFromPdf } from './extractText';
 import { extractGas} from './patterns/gas';
-import { type InvoiceType } from './types/invoiceTypes';
-import {
-  type customer_data,
-  type electric_data,
-  type gas_data,
-  type OCR_result,
+import { type invoice_type } from './types/invoiceTypes';
+import type {
+  build_result,
+  customer_data,
+  electric_data,
+  gas_data,
+  OCR_result
 } from './types/OCR_results';
 
-export type BuildResult =
-  | {
-      ok    : true;
-      type  : InvoiceType;
-      data  : OCR_result
-      error : string | null;
-      customer: customer_data | null;
-      electric: electric_data | null;
-      gas: gas_data | null;
-      customerConfidence: DataConfidence<customer_data> | null;
-      electricConfidence: DataConfidence<electric_data> | null;
-      gasConfidence: DataConfidence<gas_data> | null;
-    }
-  | { ok: false; error: "can't read invoice" }
-  | { ok: false; error: 'unknown invoice type' };
+
 
 export class InvoiceFactory {
-  private type: InvoiceType              = 'unknown';
+  private type: invoice_type              = 'unknown';
   private customer: customer_data | null = null;
   private electric: electric_data | null = null;
   private gas: gas_data | null           = null;
@@ -44,7 +29,7 @@ export class InvoiceFactory {
     private readonly mimeType: string,
   ) {}
 
-  setType(v : InvoiceType) {
+  setType(v : invoice_type) {
     this.type = v;
   };
 
@@ -76,45 +61,62 @@ export class InvoiceFactory {
     return this.gas;
   };
 
-  async build(): Promise<BuildResult> {
+  async build(): Promise<build_result> {
     if (this.mimeType !== 'application/pdf') {
       throw new Error('Unknown type');
     }
 
-    let text: string;
+    let error : string | null = null;
+    let text  : string        = '';
+
     try {
       text = await extractTextFromPdf(this.file);
+      if (!text.trim()) error = "can't read invoice";
     } catch {
-      return { ok: false, error: "can't read invoice" };
-    }
-    if (!text.trim()) {
-      return { ok: false, error: "can't read invoice" };
+      error = "can't read invoice";
     }
 
-    this.setType(detectInvoiceType(text));
-
-    if (this.type === 'unknown') {
-      return { ok: false, error: 'unknown invoice type' };
+    if (!error) {
+      this.setType(detectInvoiceType(text));
+      if (this.type === 'unknown') {
+        error = 'unknown invoice type';
+      }
     }
 
-    this.setCustomer(extractCustomer(text));
-
-    if (this.type === 'electric' || this.type === 'dual') {
-      this.setElectric(extract_electric(text));
+    if (!error) {
+      this.setCustomer(extractCustomer(text));
+      if (this.type === 'electric' || this.type === 'dual') {
+        this.setElectric(extract_electric(text));
+      }
+      if (this.type === 'gas' || this.type === 'dual') {
+        this.setGas(extractGas(text));
+      }
     }
-    if (this.type === 'gas' || this.type === 'dual') {
-      this.setGas(extractGas(text));
+
+    const success = error === null;
+
+    if (error) {
+      console.error(`InvoiceFactory.build failed: ${error}`);
     }
 
     return {
-      ok: true,
-      type: this.type,
-      customer: this.customer,
-      electric: this.electric,
-      gas: this.gas,
-      customerConfidence: this.customer ? compute_customer_confidence(this.customer) : null,
-      electricConfidence: this.electric ? compute_electric_confidence(this.electric) : null,
-      gasConfidence: this.gas ? compute_gas_confidence(this.gas) : null,
+      success,
+      data : success
+        ? {
+            type   : this.type,
+            result : {
+              customer : this.customer,
+              electric : this.electric,
+              gas      : this.gas,
+            },
+            confidence : compute_total_confidence_score(
+              this.customer,
+              this.electric,
+              this.gas,
+            ),
+          }
+        : null,
+      error,
     };
   }
-}
+};

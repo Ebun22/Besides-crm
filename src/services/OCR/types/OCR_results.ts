@@ -1,3 +1,5 @@
+import type { invoice_type } from "./invoiceTypes";
+
 export interface invoice_period {
   from : string;
   to   : string;
@@ -108,6 +110,17 @@ export class gas_data {
 };
 
 export interface OCR_result {
-    gas      : gas_data,
-    electric : electric_data,
-}
+  type       : invoice_type;
+  result     : {
+    customer : customer_data | null;
+    electric : electric_data | null;
+    gas      : gas_data | null;
+  };
+  confidence : number;
+};
+
+export type build_result = {
+  success : boolean;
+  data    : OCR_result | null;
+  error   : string | null;
+};

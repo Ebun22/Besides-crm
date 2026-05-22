@@ -67,7 +67,7 @@ const server = createServer(async (req, res) => {
 
   try {
     const result = await factory.build();
-    sendJson(res, result.ok ? 200 : 422, result);
+    sendJson(res, result.success ? 200 : 422, result);
   } catch (err) {
     if (err instanceof Error && err.message === 'Unknown type') {
       sendJson(res, 415, { error: 'Unknown type' });

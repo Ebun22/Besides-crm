@@ -1,1 +1,1 @@
-export type InvoiceType = 'electric' | 'gas' | 'dual' | 'unknown';
+export type invoice_type = 'electric' | 'gas' | 'dual' | 'unknown';

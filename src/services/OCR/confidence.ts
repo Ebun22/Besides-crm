@@ -4,7 +4,10 @@ export interface DataConfidence<T> {
   confidence: number;
 }
 
-function count_present_fields<T extends object>(data: T): { ok: number; total: number } {
+function count_present_fields<T extends object>(data: T): {
+  ok    : number;
+  total : number
+} {
   const keys = Object.keys(data) as (keyof T)[];
 
   let present_field = 0;
@@ -21,15 +24,24 @@ function count_present_fields<T extends object>(data: T): { ok: number; total: n
 };
 
 export function compute_total_confidence_score(
-  customer: customer_data,
-  electric: electric_data,
-  gas: gas_data
+  customer : customer_data | null,
+  electric : electric_data | null,
+  gas      : gas_data | null
 ): number {
-  const c = count_present_fields(customer);
-  const e = count_present_fields(electric);
-  const g = count_present_fields(gas);
-  const ok = c.ok + e.ok + g.ok;
-  const total = c.total + e.total + g.total;
+  const parts = [customer, electric, gas].filter(
+    (d): d is customer_data | electric_data | gas_data => d !== null
+  );
+
+  if (parts.length === 0) return 0;
+
+  let ok    = 0;
+  let total = 0;
+
+  for (const p of parts) {
+    const c = count_present_fields(p);
+    ok    += c.ok;
+    total += c.total;
+  };
 
   return Math.round((ok / total) * 100);
 };
