@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS "bms"."negotiation__details" (
     REFERENCES "bms"."negotiation__states" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT negotiation__details_status_fkey                 FOREIGN KEY ("tipo_cliente")
+  CONSTRAINT negotiation__details_status_fkey                 FOREIGN KEY ("status")
     REFERENCES "bms"."negotiation__status" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE

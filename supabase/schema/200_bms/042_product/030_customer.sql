@@ -2,8 +2,8 @@ CREATE TABLE IF NOT EXISTS "bms"."product__customer" (
   "id"          uuid NOT NULL DEFAULT gen_random_uuid (),
   "product"     uuid NOT NULL,
   "customer"    uuid NOT NULL,
-  CONSTRAINT product__customer_pkey PRIMARY KEY ("id"),
-  CONSTRAINT product__negotiation__customer_product_fkey FOREIGN KEY ("customer")
+  CONSTRAINT product__customer_pkey          PRIMARY KEY ("id"),
+  CONSTRAINT product__customer_customer_fkey FOREIGN KEY ("customer")
     REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE

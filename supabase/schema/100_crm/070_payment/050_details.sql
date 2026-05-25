@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS "crm"."payment__details" (
   "cc_tit_birth_place" text     NULL,
   "cc_tit_birth_date"  bigint   NULL,
   "cc_tit_sex"         varchar  NULL,
-  CONSTRAINT payment_details_pkey            PRIMARY KEY ("id"),
-  CONSTRAINT payment__details_customer_fkey  FOREIGN KEY ("customer")
+  CONSTRAINT payment__details_pkey          PRIMARY KEY ("id"),
+  CONSTRAINT payment__details_customer_fkey FOREIGN KEY ("customer")
     REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT payment__details_pay_type_fkey FOREIGN KEY ("type")
+  CONSTRAINT payment__details_type_fkey     FOREIGN KEY ("type")
     REFERENCES "crm"."payment__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE

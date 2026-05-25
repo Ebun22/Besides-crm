@@ -8,37 +8,37 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
   "supplier"                     varchar(60)     NULL,
   "DL"                           varchar(60)     NULL,
   "pricing_type"                 uuid            NULL,
-  "vendita_ee_quota_consumi_eur" numeric(8,2)    NULL,
-  "vendita_ee_quota_fissa_eur"   numeric(8,2)    NULL,
-  "per_tot"                      numeric(8,2)    NULL,
-  "per_F1"                       numeric(8,2)    NULL,
-  "per_F2"                       numeric(8,2)    NULL,
-  "per_F23"                      numeric(8,2)    NULL,
-  "per_F3"                       numeric(8,2)    NULL,
-  "volume"                       numeric(8,2)    NULL,
-  "potenza"                      numeric(8,2)    NULL,
-  "tensione"                     numeric(8,2)    NULL,
-  CONSTRAINT supply_point_ele_pkey              PRIMARY KEY ("id")
-  -- CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
-  --   REFERENCES "bms"."negotiation__details" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_details_fkey      FOREIGN KEY ("supply_point")
-  --   REFERENCES "bms"."supply_point__details" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_uso_forn_fkey     FOREIGN KEY ("uso_forn")
-  --   REFERENCES "bms"."product__usage" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_off_type_fkey     FOREIGN KEY ("offer_type")
-  --   REFERENCES "bms"."product__offer_type" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_pricing_type_fkey     FOREIGN KEY ("pricing_type")
-  --   REFERENCES "bms"."product__pricing_type" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE
+  "vendita_ee_quota_consumi_eur" numeric(8,3)    NULL,
+  "vendita_ee_quota_fissa_eur"   numeric(8,3)    NULL,
+  "per_tot"                      numeric(8,3)    NULL,
+  "per_F1"                       numeric(8,3)    NULL,
+  "per_F2"                       numeric(8,3)    NULL,
+  "per_F23"                      numeric(8,3)    NULL,
+  "per_F3"                       numeric(8,3)    NULL,
+  "volume"                       numeric(8,3)    NULL,
+  "potenza"                      numeric(8,3)    NULL,
+  "tensione"                     numeric(8,3)    NULL,
+  CONSTRAINT supply_point__electric_pkey              PRIMARY KEY ("id"),
+  CONSTRAINT supply_point__electric_negotiation_fkey  FOREIGN KEY ("negotiation")
+    REFERENCES "bms"."negotiation__details" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point__electric_supply_point_fkey FOREIGN KEY ("supply_point")
+    REFERENCES "bms"."supply_point__details" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point__electric_uso_forn_fkey     FOREIGN KEY ("uso_forn")
+    REFERENCES "bms"."product__usage" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point__electric_offer_type_fkey   FOREIGN KEY ("offer_type")
+    REFERENCES "bms"."product__offer_type" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point__electric_pricing_type_fkey FOREIGN KEY ("pricing_type")
+    REFERENCES "bms"."product__pricing_types" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 ALTER TABLE "bms"."supply_point__electric" OWNER TO "postgres";
