@@ -15,24 +15,24 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__gas" (
   "ateco_descr"              text            NULL,
   "consumption_quota_charge" numeric(8,2)    NULL,
   "fixed_fee_charge"         numeric(8,2)    NULL,
-  "per_tot"               numeric(8,2)    NULL,
-  CONSTRAINT supply_point_gas_pkey              PRIMARY KEY ("id")
-  -- CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
-  --   REFERENCES "bms"."negotiation__details" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_details_fkey      FOREIGN KEY ("supply_point")
-  --   REFERENCES "bms"."supply_point__details" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_uso_forn_fkey     FOREIGN KEY ("uso_forn")
-  --   REFERENCES "bms"."product__usage" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE,
-  -- CONSTRAINT supply_point_off_type_fkey     FOREIGN KEY ("offer_type_gas")
-  --   REFERENCES "bms"."product__offer_type" ("id")
-  --   ON UPDATE CASCADE
-  --   ON DELETE CASCADE
+  "per_tot"                  numeric(8,2)    NULL,
+  CONSTRAINT supply_point_gas_pkey          PRIMARY KEY ("id"),
+  CONSTRAINT supply_point__neg_details_fkey FOREIGN KEY ("negotiation")
+    REFERENCES "bms"."negotiation__details" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point_details_fkey      FOREIGN KEY ("supply_point")
+    REFERENCES "bms"."supply_point__details" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point_uso_forn_fkey     FOREIGN KEY ("uso_forn")
+    REFERENCES "bms"."product__usage" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT supply_point_off_type_fkey     FOREIGN KEY ("offer_type_gas")
+    REFERENCES "bms"."product__offer_type" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 ALTER TABLE "bms"."supply_point__gas" OWNER TO "postgres";

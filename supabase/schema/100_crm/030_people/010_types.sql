@@ -53,5 +53,7 @@ INSERT INTO "crm"."people__types" (
   "description"
 )
 VALUES
-  ('CUSTOMER', NULL),
+  ('PRIVATE_CUSTOMER', NULL),
+  ('BUSINESS_CUSTOMER', NULL),
+  ('CONDOMINIUM', NULL),
   ('LEGAL_REP', NULL);

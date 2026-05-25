@@ -1,24 +1,23 @@
 CREATE TABLE IF NOT EXISTS "crm"."people__details" (
   "id"             uuid        NOT NULL DEFAULT gen_random_uuid (),
-  "cognome"        text            NULL,
-  "nome"           text            NULL,
-  "cod_fis"        varchar(60)     NULL,
+  "cognome"        varchar(60)     NULL,
+  "nome"           varchar(60)     NULL,
+  "legal_name"     text            NULL,
+  "cod_fis"        varchar(16)     NULL,
+  "p_iva"          varchar(11)     NULL,
   "ref_cognome"    text            NULL,
   "ref_nome"       text            NULL,
-  "cl_celnum"      varchar(60)     NULL,
-  "cl_fixnum"      varchar(60)     NULL,
+  "cl_celnum"      varchar(10)     NULL,
+  "cl_fixnum"      varchar(10)     NULL,
   "email"          varchar(60)     NULL,
   "pec"            varchar(60)     NULL,
   "id_type"        uuid            NULL,
-  "id_number"      varchar(60)     NULL,
+  "id_number"      varchar(40)     NULL,
   "tit_birthplace" text            NULL,
   "tit_birth_date" text            NULL,
-  "tit_gender"     varchar(60)     NULL,
+  "tit_gender"     varchar(1)      NULL,
   "cust_address_1" text            NULL,
   "cust_address_2" text            NULL,
-  "cust_zip"       bigint          NULL,
-  "cust_town"      text            NULL,
-  "cust_pr"        varchar(60)     NULL,
   "type"           uuid        NOT NULL,
   "status"         uuid            NULL,
   CONSTRAINT people__details_pkey         PRIMARY KEY ("id"),
@@ -124,7 +123,9 @@ ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "crm"."people__details";
 
 -- TRIGGER
 CREATE OR REPLACE FUNCTION "public"."set_default_people_status"()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+AS
+$$
 BEGIN
     SELECT "id"
     INTO NEW."status"
