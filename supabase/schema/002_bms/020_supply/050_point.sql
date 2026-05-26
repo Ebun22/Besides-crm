@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "public"."supply__address" (
+CREATE TABLE IF NOT EXISTS "public"."bms.supply__point" (
   "id"             uuid    NOT NULL DEFAULT gen_random_uuid (),
   "supp_address_1" text        NULL,
   "supp_address_2" text        NULL,
