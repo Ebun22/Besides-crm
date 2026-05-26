@@ -1,4 +1,4 @@
-import type { invoice_type } from "./types/invoiceTypes";
+import type { invoice_type } from "./types/invoiceTypes.ts";
 
 export function detectInvoiceType(text: string): invoice_type {
   const electric =

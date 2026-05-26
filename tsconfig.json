@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*", "tests/**/*", "supabase/**/*", "migrate.ts", "env/**/*", "src/App.tsx"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "supabase/functions/**"],
   "compilerOptions": {
     "target": "ESNext",
     "module": "es2022",

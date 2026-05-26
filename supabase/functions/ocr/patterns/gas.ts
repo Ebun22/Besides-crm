@@ -1,5 +1,5 @@
-import { gas_data } from '../types/OCR_results.js';
-import { parseItNumber } from '../numbers.js';
+import { gas_data } from '../types/OCR_results.ts';
+import { parseItNumber } from '../numbers.ts';
 
 const PDR_RE                    = /Codice PDR:?\s*(\d{14})/i;
 const BILLING_PERIOD_RE         = /(?:Periodo di competenza|Periodo di Fatturazione):?\s*(\d{2}[./-]\d{2}[./-]\d{4})\s*[-–]\s*(\d{2}[./-]\d{2}[./-]\d{4})/i;

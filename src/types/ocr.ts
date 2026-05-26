@@ -1,0 +1,62 @@
+export type invoice_type = 'electric' | 'gas' | 'dual' | 'unknown';
+
+export interface invoice_period {
+  from : string;
+  to   : string;
+}
+
+export interface customer_data {
+  supply_holder   : string | null;
+  tax_code        : string | null;
+  mailing_address : string | null;
+  payment_type    : string | null;
+  supply_address  : string | null;
+}
+
+export interface electric_data {
+  invoice_type             : string | null;
+  pod                      : string | null;
+  billing_period           : invoice_period | null;
+  invoice_issue_date       : string | null;
+  supplier                 : string | null;
+  local_distributor        : string | null;
+  annual_consumption       : number | null;
+  contracted_power         : number | null;
+  voltage_level            : string | null;
+  intended_use             : string | null;
+  consumption_quote        : number | null;
+  fixed_power_quote        : number | null;
+  offer_type               : string | null;
+  tariff_type              : string | null;
+  total_active_consumption : number | null;
+  band_F1                  : number | null;
+  band_F2                  : number | null;
+  band_F3                  : number | null;
+  total_amount             : number | null;
+}
+
+export interface gas_data {
+  invoice_type               : string | null;
+  pdr                        : string | null;
+  billing_period             : invoice_period | null;
+  invoice_issue_date         : string | null;
+  supplier                   : string | null;
+  local_distributor          : string | null;
+  annual_consumption         : number | null;
+  usage_categories           : string | null;
+  meter_serial_number        : string | null;
+  remi                       : string | null;
+  offer_type                 : string | null;
+  tariff_type                : string | null;
+  ateco_code                 : string | null;
+  ateco_category_description : string | null;
+  consumption_quote          : number | null;
+  fixed_gas_quote            : number | null;
+  gas_consumption            : number | null;
+  total_amount               : number | null;
+  industrial_excise_duties   : boolean | null;
+}
+
+export interface DataConfidence<T> {
+  confidence: number;
+}

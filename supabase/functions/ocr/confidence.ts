@@ -1,4 +1,4 @@
-import type { customer_data, electric_data, gas_data } from "./types/OCR_results";
+import type { customer_data, electric_data, gas_data } from "./types/OCR_results.ts";
 
 export interface DataConfidence<T> {
   confidence: number;

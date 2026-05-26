@@ -1,4 +1,4 @@
-import type { invoice_type } from "./invoiceTypes";
+import type { invoice_type } from "./invoiceTypes.ts";
 
 export interface invoice_period {
   from : string;

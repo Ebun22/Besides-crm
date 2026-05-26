@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import { public_env } from '@env/public';
 import type {
   customer_data,
   electric_data,
   gas_data,
   invoice_period,
-} from './services/OCR/types/OCR_results';
-import type { DataConfidence } from './services/OCR/confidence';
+  DataConfidence,
+} from './types/ocr';
 
 const OCR_ENDPOINT =
-  import.meta.env.VITE_OCR_ENDPOINT ?? 'http://localhost:3001/api/invoices/extract';
+  import.meta.env.VITE_OCR_ENDPOINT ?? 'http://127.0.0.1:54321/functions/v1/ocr';
+
+const SUPABASE_KEY = public_env.supabase_publishable_key as string | undefined;
 
 interface ExtractedResult {
   type: 'electric' | 'gas' | 'dual';
@@ -369,7 +372,12 @@ export default function InvoiceUpload() {
     try {
       const res = await fetch(OCR_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+        headers: {
+          'Content-Type': file.type || 'application/octet-stream',
+          ...(SUPABASE_KEY
+            ? { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+            : {}),
+        },
         body: file,
       });
       const body = await res.json();
@@ -390,16 +398,25 @@ export default function InvoiceUpload() {
         return;
       }
 
+      const payload = body.data;
+      if (!payload) {
+        setError(body.error ?? 'Could not process invoice');
+        setOcrStatus('');
+        return;
+      }
+
       setExtracted({
-        type: body.type,
-        customer: body.customer ?? null,
-        electric: body.electric,
-        gas: body.gas,
-        customerConfidence: body.customerConfidence ?? null,
-        electricConfidence: body.electricConfidence ?? null,
-        gasConfidence: body.gasConfidence ?? null,
+        type: payload.type,
+        customer: payload.result?.customer ?? null,
+        electric: payload.result?.electric ?? null,
+        gas: payload.result?.gas ?? null,
+        customerConfidence: null,
+        electricConfidence: null,
+        gasConfidence: null,
       });
-      setOcrStatus(`Invoice processed (${body.type})`);
+      setOcrStatus(
+        `Invoice processed (${payload.type}, ${payload.confidence}% confidence)`,
+      );
       setFile(null);
     } catch (err) {
       console.error('Upload error:', err);

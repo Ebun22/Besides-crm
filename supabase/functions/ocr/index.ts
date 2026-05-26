@@ -1,5 +1,4 @@
-import { Buffer } from 'node:buffer';
-import { InvoiceFactory } from '../../src/services/OCR/InvoiceFactory.ts';
+import { InvoiceFactory } from './InvoiceFactory.ts';
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -21,33 +20,32 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: cors_headers });
   }
 
-  const url = new URL(req.url);
-  if (req.method !== 'POST' || url.pathname !== '/api/invoices/extract') {
+  if (req.method !== 'POST') {
     return sendJson(404, { error: 'Not found' });
   }
 
-  const contentLength = Number(req.headers.get('content-length') ?? 0);
-  if (contentLength > MAX_BYTES) {
+  const declared = Number(req.headers.get('content-length') ?? 0);
+  if (declared > MAX_BYTES) {
     return sendJson(413, { error: 'File too large' });
   }
 
-  let buf: Buffer;
+  let bytes: Uint8Array;
   try {
     const ab = await req.arrayBuffer();
     if (ab.byteLength > MAX_BYTES) {
       return sendJson(413, { error: 'File too large' });
     }
-    buf = Buffer.from(ab);
+    bytes = new Uint8Array(ab);
   } catch {
     return sendJson(400, { error: 'Failed to read body' });
   }
 
-  if (buf.length === 0) {
+  if (bytes.length === 0) {
     return sendJson(400, { error: 'Empty body' });
   }
 
   const mimeType = (req.headers.get('content-type') ?? '').split(';')[0].trim();
-  const factory = new InvoiceFactory(buf, mimeType);
+  const factory = new InvoiceFactory(bytes, mimeType);
 
   try {
     const result = await factory.build();

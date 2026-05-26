@@ -1,31 +1,25 @@
-import {
-  compute_total_confidence_score,
-  type DataConfidence,
-} from './confidence';
-import { detectInvoiceType } from './detectType';
-import { extractCustomer } from './patterns/customer';
-import { extract_electric} from './patterns/electric';
-import { extractTextFromPdf } from './extractText';
-import { extractGas} from './patterns/gas';
-import { type invoice_type } from './types/invoiceTypes';
+import { compute_total_confidence_score } from './confidence.ts';
+import { detectInvoiceType } from './detectType.ts';
+import { extractCustomer } from './patterns/customer.ts';
+import { extract_electric } from './patterns/electric.ts';
+import { extractTextFromPdf } from './extractText.ts';
+import { extractGas } from './patterns/gas.ts';
+import type { invoice_type } from './types/invoiceTypes.ts';
 import type {
   build_result,
   customer_data,
   electric_data,
   gas_data,
-  OCR_result
-} from './types/OCR_results';
-
-
+} from './types/OCR_results.ts';
 
 export class InvoiceFactory {
-  private type: invoice_type              = 'unknown';
-  private customer: customer_data | null = null;
-  private electric: electric_data | null = null;
-  private gas: gas_data | null           = null;
+  private type     : invoice_type         = 'unknown';
+  private customer : customer_data | null = null;
+  private electric : electric_data | null = null;
+  private gas      : gas_data      | null = null;
 
   constructor(
-    private readonly file: Buffer,
+    private readonly file: Uint8Array,
     private readonly mimeType: string,
   ) {}
 
