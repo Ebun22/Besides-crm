@@ -5,20 +5,20 @@ const PDR_RE                    = /Codice PDR:?\s*(\d{14})/i;
 const BILLING_PERIOD_RE         = /(?:Periodo di competenza|Periodo di Fatturazione):?\s*(\d{2}[./-]\d{2}[./-]\d{4})\s*[-–]\s*(\d{2}[./-]\d{2}[./-]\d{4})/i;
 const INVOICE_ISSUE_DATE_RE     = /Emessa il:?\s*(\d{2}\.\d{2}\.\d{4})/i;
 const ANNUAL_CONSUMPTION_RE     = /Consumo annuo:?\s*([\d.,]+)\s*Smc/i;
-const INTENDED_USE_RE           = /Tipologia cliente:?\s*([^\n]+)/i;
-const TIPOLOGIA_USO_RE          = /Tipologia d['’]uso:?\s*([^\n]+)/i;
+const INTENDED_USE_RE           = /Tipologia cliente:?\s*([A-ZÀ-Ý]{2,}(?:\s+[A-ZÀ-Ý]{2,})*)/;
+const TIPOLOGIA_USO_RE          = /Tipologia\s+d['’]uso:?\s*(.+?)\s+(?=PCS|Coefficiente|Classe|Matricola|Letture|Consumi|REMI|Cabina|Punto|Codice|Tipologia)/i;
 const METER_NUMBER_RE           = /Matricola contatore:?\s*(\S+)/i;
-const REMI_RE                   = /(?:Cabina di Riduzione e Misura|REMI|Punto di Consegna|Code Re\. Mi\.)[:\s]*([\w\-/]+)/i;
+const REMI_RE                   = /(?:Cabina di Riduzione e Misura|REMI|Punto di Consegna|Codice\s+Re\.?\s*Mi\.?|Cod\.?\s+Re\.?\s*Mi\.?)[:\s]*([\w\-/]+)/i;
 const ATECO_CODE_RE             = /(?:Codice\s+)?ATECO[^:\n]{0,30}:?\s*(\d{2}\.\d{2}(?:\.\d+)?)/i;
-const ATECO_DESC_RE             = /(?:Descrizione|Attività)\s+ATECO[:\s]*([^\n]+)/i;
-const OFFER_TYPE_RE             = /Tipologia offerta:?\s*([^\n]+)/i;
-const TARIFF_TYPE_RE            = /Tipologia prezzo offerta:?\s*([^\n]+)/i;
+const ATECO_DESC_RE             = /(?:Descrizione|Attività)\s+ATECO[:\s]*(.+?)\s+(?=Tipologia|Codice|Servizio|Periodo|Letture|Consumi|Matricola|Quantità|Quota|Spesa|TOTALE)/i;
+const OFFER_TYPE_RE             = /Tipologia offerta:?\s*(.+?)\s+(?=Tipologia\s+prezzo|Codice\s+offerta|Periodicità|Spesa\s+per|Decorrenza|Formula|Valori|Onere|Quota)/i;
+const TARIFF_TYPE_RE            = /Tipologia prezzo offerta:?\s*(.+?)\s+(?=Periodicità|Spesa\s+per|Decorrenza|Formula|Valori|Onere|Quota|Codice|Tipologia)/i;
 const CONSUMPTION_QUOTE_RE      = /Quota per consumi:?[\s\n]*[\d.,]+\s*Smc\s*(\d+[,.]\d{2})/i;
 const FIXED_FEE_RE              = /Quota fissa:?[\n\s]*[\d.,\s]+\s*Mesi\s*(\d+[,.]\d{2})/i;
 const GAS_CONSUMPTION_PERIOD_RE = /Consumo totale fatturato:?\s*([\d.,]+)\s*Smc/i;
-const TOTAL_AMOUNT_RE           = /TOTALE\s+DA\s+PAGARE\s*[\s\n]+([\d.,]+)/i;
+const TOTAL_AMOUNT_RE           = /TOTALE\s+DA\s+PAGARE\s+(\d+[,.]\d{2})/i;
 const SUPPLIER_RE               = /([A-Z][A-Za-z'.&\-]+(?:\s+[A-Z]?[A-Za-z'.&\-]+){0,3})\s+(?:S\.r\.l\.|S\.p\.A\.|S\.n\.c|S\.a\.s)/i;
-const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distribuzione)[^:\n]{0,40}:\s*([^\n]+)/i;
+const DISTRIBUTOR_RE            = /(?:Distributore(?: locale)?|Impresa di distribuzione)[^:\n]{0,40}:\s*([A-Z][A-Za-z0-9'.&\-\s]+?)\s+(?=Tipologia|Codice|Matricola|Letture|Consumi|REMI|Cabina|Punto|Quantità|Quota|Spesa|TOTALE|Servizio|Periodo)/i;
 const INDUSTRIAL_EXCISE_RE      = /(?:Accise e IVA):?\s*(\d+[,.]\d{2})/i;
 
 export function extractGas(text: string): gas_data {

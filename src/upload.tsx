@@ -8,29 +8,28 @@ import type {
   DataConfidence,
 } from './types/ocr';
 
-const OCR_ENDPOINT =
-  import.meta.env.VITE_OCR_ENDPOINT ?? 'http://127.0.0.1:54321/functions/v1/ocr';
+const OCR_ENDPOINT = public_env.ocr_url;
 
 const SUPABASE_KEY = public_env.supabase_publishable_key as string | undefined;
 
 interface ExtractedResult {
-  type: 'electric' | 'gas' | 'dual';
-  customer: customer_data | null;
-  electric: electric_data | null;
-  gas: gas_data | null;
-  customerConfidence: DataConfidence<customer_data> | null;
-  electricConfidence: DataConfidence<electric_data> | null;
-  gasConfidence: DataConfidence<gas_data> | null;
+  type               : 'electric' | 'gas' | 'dual';
+  customer           : customer_data | null;
+  electric           : electric_data | null;
+  gas                : gas_data | null;
+  customerConfidence : DataConfidence<customer_data> | null;
+  electricConfidence : DataConfidence<electric_data> | null;
+  gasConfidence      : DataConfidence<gas_data> | null;
 }
 
 const CUSTOMER_FIELDS: Array<{
-  key: keyof customer_data;
-  label: string;
+  key   : keyof customer_data;
+  label : string;
 }> = [
-  { key: 'supply_holder', label: 'Intestatario fornitura' },
-  { key: 'tax_code', label: 'Codice Fiscale' },
-  { key: 'supply_address', label: 'Indirizzo di fornitura' },
-  { key: 'mailing_address', label: 'Indirizzo di recapito' }
+  { key : 'supply_holder', label: 'Intestatario fornitura' },
+  { key : 'tax_code', label: 'Codice Fiscale' },
+  { key : 'supply_address', label: 'Indirizzo di fornitura' },
+  { key : 'mailing_address', label: 'Indirizzo di recapito' }
 ];
 
 const CUSTOMER_LABELS: Partial<Record<keyof customer_data, string>> = {
@@ -381,6 +380,7 @@ export default function InvoiceUpload() {
         body: file,
       });
       const body = await res.json();
+      console.log("This is the body: ", body);
 
       if (res.status === 415) {
         setError('Unknown type');
