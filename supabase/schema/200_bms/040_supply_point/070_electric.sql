@@ -28,11 +28,11 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT supply_point__electric_uso_forn_fkey     FOREIGN KEY ("uso_forn")
-    REFERENCES "bms"."product__usage" ("id")
+    REFERENCES "bms"."product__usage_categories" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT supply_point__electric_offer_type_fkey   FOREIGN KEY ("offer_type")
-    REFERENCES "bms"."product__offer_type" ("id")
+    REFERENCES "bms"."product__offer_types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT supply_point__electric_pricing_type_fkey FOREIGN KEY ("pricing_type")
