@@ -62,7 +62,7 @@ AS $$
 DECLARE
   v_role_id uuid;
 BEGIN
-  IF NEW.email = 'roldofo@besides.com' THEN
+  IF NEW.email = 'rodolfo@besides.com' THEN
     SELECT id INTO v_role_id
     FROM "public"."permission__roles"
     WHERE "name" = 'Consultant'
@@ -71,8 +71,8 @@ BEGIN
     IF v_role_id IS NOT NULL THEN
       INSERT INTO "public"."permission__user_roles"
       (
-        "user_id",
-        "role_id"
+        "user",
+        "role"
       )
       VALUES
         (NEW.id, v_role_id)

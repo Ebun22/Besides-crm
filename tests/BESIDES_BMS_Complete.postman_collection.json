@@ -1,0 +1,1456 @@
+{
+  "info": {
+    "_postman_id": "bms-collection-2026",
+    "name": "BESIDES BMS - Complete API Documentation",
+    "description": "Comprehensive API documentation for BESIDES Business Management System (BMS)\n\n## Overview\nThis collection provides complete CRUD operations for managing:\n- Negotiations (contracts and deals)\n- Supply Points (addresses and service locations)\n- Service Details (electricity, gas, telecom)\n- Documents (invoices, contracts, etc.)\n\n## Authentication\nAll endpoints require JWT authentication. Token is automatically obtained on login and saved to collection variables.\n\n## Quick Start\n1. Run \"SignIn\" request to authenticate\n2. Access token auto-saved to {{access_token}}\n3. All subsequent requests use this token\n4. Token expires after 1 hour - re-login to refresh\n\n## Schema Overview\n### BMS Schema Tables:\n- negotiation__details: Core negotiation/contract records\n- supply_point__details: Service delivery locations\n- supply_point__electric: Electricity service details\n- supply_point__gas: Gas service details\n- telecom__details: Telecommunications details\n- document__details: Uploaded documents (invoices, contracts, etc.)\n\n## Response Format\n- Success: HTTP 200/201 with data array or object\n- Error: HTTP 4xx/5xx with error message\n- Pagination: Use limit/offset query parameters\n\n## Data Relationships\n- negotiation__details → supply_point__electric/gas (1:M)\n- supply_point__details → supply_point__electric/gas (1:M)\n- negotiation__details → document__details (1:M)\n- crm.people__details → document__details (cross-schema link)\n\nVersion: 1.0\nLast Updated: May 2026",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31345761"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Authentication and token management",
+      "item": [
+        {
+          "name": "SignIn",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test 1: Verify status code",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "// Test 2: Verify response has access token",
+                  "pm.test(\"Response has access_token\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('access_token');",
+                  "});",
+                  "",
+                  "// Test 3: Save access token to collection variable",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"access_token\", jsonData.access_token);",
+                  "",
+                  "// Test 4: Verify token is valid JWT format",
+                  "pm.test(\"Access token is valid JWT\", function () {",
+                  "    var token = jsonData.access_token;",
+                  "    var parts = token.split('.');",
+                  "    pm.expect(parts).to.have.lengthOf(3);",
+                  "});",
+                  "",
+                  "// Test 5: Verify user object",
+                  "pm.test(\"User object present and valid\", function () {",
+                  "    pm.expect(jsonData.user).to.have.property('id');",
+                  "    pm.expect(jsonData.user).to.have.property('email');",
+                  "    pm.collectionVariables.set(\"user_id\", jsonData.user.id);",
+                  "});",
+                  "",
+                  "// Test 6: Verify token expiration",
+                  "pm.test(\"Token has expiration time\", function () {",
+                  "    pm.expect(jsonData.expires_in).to.be.a('number');",
+                  "    console.log(\"Token expires in \" + jsonData.expires_in + \" seconds\");",
+                  "});",
+                  "",
+                  "// Log successful login",
+                  "console.log(\"✅ Login successful - Token saved to collection variables\");",
+                  "console.log(\"User ID: \" + jsonData.user.id);",
+                  "console.log(\"Token valid for: \" + jsonData.expires_in + \" seconds\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text",
+                "description": "Supabase anonymous API key"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@besides.com\",\n  \"password\": \"your_password_here\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/auth/v1/token?grant_type=password",
+              "host": ["{{supabase_url}}"],
+              "path": ["auth", "v1", "token"],
+              "query": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                }
+              ]
+            },
+            "description": "## Authentication - Sign In\n\nAuthenticates user and returns JWT access token for subsequent API calls.\n\n### Request Body\n```json\n{\n  \"email\": \"user@besides.com\",\n  \"password\": \"password123\"\n}\n```\n\n### Response\n```json\n{\n  \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600,\n  \"refresh_token\": \"v1.MRjsj3SkVenEf...\",\n  \"user\": {\n    \"id\": \"user-uuid\",\n    \"email\": \"user@besides.com\",\n    \"role\": \"authenticated\"\n  }\n}\n```\n\n### Token Usage\n- Access token is automatically saved to `{{access_token}}` collection variable\n- Token is valid for 1 hour (3600 seconds)\n- Include token in `Authorization: Bearer {{access_token}}` header for all API requests\n- User ID is saved to `{{user_id}}` variable\n\n### Token Expiration\nWhen token expires, re-run this request to get a fresh token.\n\n### Error Responses\n- **400**: Invalid email/password format\n- **401**: Invalid credentials\n- **422**: Missing required fields\n\n### Notes\n- Email must be a valid user account in the system\n- Password is case-sensitive\n- Account must be active (not disabled)\n- Token is encrypted JWT - never expose in public code"
+          },
+          "response": [
+            {
+              "name": "Success - Login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"user@besides.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/auth/v1/token?grant_type=password"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNjg5MjQ3NzAwLCJpYXQiOjE2ODkyNDQxMDB9.xxx\",\n  \"token_type\": \"bearer\",\n  \"expires_in\": 3600,\n  \"refresh_token\": \"v1.MRjsj3SkVenEf2qG5H8J0K1L2M3N4O5P6Q7R8S9T0\",\n  \"user\": {\n    \"id\": \"12345678-1234-1234-1234-123456789012\",\n    \"aud\": \"authenticated\",\n    \"role\": \"authenticated\",\n    \"email\": \"user@besides.com\",\n    \"email_confirmed_at\": \"2026-05-01T10:00:00Z\",\n    \"created_at\": \"2026-05-01T10:00:00Z\"\n  }\n}"
+            },
+            {
+              "name": "Error - Invalid Credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"wrong@besides.com\",\n  \"password\": \"wrongpass\"\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/auth/v1/token?grant_type=password"
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "body": "{\n  \"error\": \"invalid_grant\",\n  \"error_description\": \"Invalid login credentials\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Negotiations",
+      "description": "CRUD operations for negotiation records - the core business workflow",
+      "item": [
+        {
+          "name": "Create Negotiation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Negotiation created with ID\", function () {",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData[0]).to.have.property('id');",
+                  "    pm.collectionVariables.set(\"negotiation_id\", jsonData[0].id);",
+                  "});",
+                  "",
+                  "pm.test(\"Required fields populated\", function () {",
+                  "    pm.expect(jsonData[0].state).to.exist;",
+                  "    pm.expect(jsonData[0].status).to.exist;",
+                  "    pm.expect(jsonData[0].created_at).to.exist;",
+                  "});",
+                  "",
+                  "console.log(\"✅ Negotiation created: \" + jsonData[0].id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"opened_by\": \"{{user_id}}\",\n  \"settore\": \"electricity-uuid-here\",\n  \"tipo_lead\": \"lead-type-uuid\",\n  \"tipo_cliente\": \"customer-type-uuid\",\n  \"canale\": \"email\",\n  \"operazione\": \"operation-uuid\",\n  \"operazione_subcategory\": \"subcategory-uuid\",\n  \"state\": \"state-uuid\",\n  \"status\": \"status-uuid\",\n  \"cons_note\": \"Initial negotiation notes\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.negotiation__details",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.negotiation__details"]
+            },
+            "description": "## Create New Negotiation\n\nCreates a new negotiation (contract/deal) record in the system.\n\n### Required Fields\n- `state`: UUID reference to negotiation__states (negotiation current state)\n- `status`: UUID reference to negotiation__status (approval status)\n\n### Optional Fields\n- `opened_by`: UUID of user who opened negotiation (FK to auth.users)\n- `settore`: UUID reference to product__settore (sector: electricity, gas, etc.)\n- `tipo_lead`: UUID reference to negotiation__tipo_lead (lead type)\n- `tipo_cliente`: UUID reference to negotiation__tipo_cliente (customer type)\n- `canale`: Channel (text) - e.g., \"email\", \"phone\", \"walk-in\"\n- `operazione`: UUID reference to product__operazione (operation type)\n- `operazione_subcategory`: UUID reference to product__operazione_subcategory\n- `cons_note`: Consultant notes (up to 256 characters)\n\n### Response\nReturns created negotiation object with auto-generated ID and timestamp.\n\n### Business Logic\n- `opened_by` defaults to current authenticated user\n- `created_at` is auto-set to current timestamp (milliseconds since epoch)\n- Initial state/status must be valid references\n\n### Error Responses\n- **400**: Missing required fields or invalid UUID format\n- **401**: Unauthorized (invalid/missing token)\n- **403**: Forbidden (RLS policy violation)\n- **409**: Conflict (foreign key constraint violation)"
+          },
+          "response": [
+            {
+              "name": "Success - Negotiation Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"state\": \"state-uuid\",\n  \"status\": \"status-uuid\",\n  \"canale\": \"email\"\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/rest/v1/bms.negotiation__details"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"opened_by\": \"12345678-1234-1234-1234-123456789012\",\n    \"settore\": \"electricity-uuid\",\n    \"tipo_lead\": \"lead-uuid\",\n    \"tipo_cliente\": \"customer-type-uuid\",\n    \"canale\": \"email\",\n    \"operazione\": \"operation-uuid\",\n    \"operazione_subcategory\": \"subcategory-uuid\",\n    \"state\": \"state-uuid\",\n    \"status\": \"status-uuid\",\n    \"cons_note\": \"Initial negotiation notes\",\n    \"created_at\": 1715001000000\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get All Negotiations",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Negotiations have required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.length > 0) {",
+                  "        pm.expect(jsonData[0]).to.have.property('id');",
+                  "        pm.expect(jsonData[0]).to.have.property('state');",
+                  "        pm.expect(jsonData[0]).to.have.property('status');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.negotiation__details?select=*&order=created_at.desc",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.negotiation__details"],
+              "query": [
+                {
+                  "key": "select",
+                  "value": "*",
+                  "description": "Select all columns"
+                },
+                {
+                  "key": "order",
+                  "value": "created_at.desc",
+                  "description": "Order by newest first"
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Limit results (pagination)",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "description": "Offset for pagination",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "## Get All Negotiations\n\nRetrieves all negotiation records with optional filtering and pagination.\n\n### Query Parameters\n\n**Filtering:**\n- `settore=eq.electricity-uuid` - Filter by sector\n- `status=eq.approved-status-uuid` - Filter by approval status\n- `state=eq.active-state-uuid` - Filter by current state\n- `opened_by=eq.user-uuid` - Filter by user who opened it\n- `canale=eq.email` - Filter by channel\n\n**Sorting:**\n- `order=created_at.desc` - Newest first (default)\n- `order=created_at.asc` - Oldest first\n- `order=state.asc,created_at.desc` - Multi-column sort\n\n**Pagination:**\n- `limit=50` - Max 50 results\n- `offset=100` - Skip first 100 (for page 3 with 50 per page)\n\n**Selection:**\n- `select=id,settore,status,created_at` - Select specific columns\n\n### Examples\n\n**Get active negotiations:**\n```\nGET /bms.negotiation__details?state=eq.active-uuid&order=created_at.desc\n```\n\n**Get page 2 (50 per page):**\n```\nGET /bms.negotiation__details?limit=50&offset=50&order=created_at.desc\n```\n\n**Get negotiations by user:**\n```\nGET /bms.negotiation__details?opened_by=eq.user-uuid\n```\n\n### Response\nReturns array of negotiation objects."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Negotiation by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns single negotiation\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "    pm.expect(jsonData.length).to.be.greaterThan(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.negotiation__details?id=eq.{{negotiation_id}}&select=*",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.negotiation__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{negotiation_id}}",
+                  "description": "Filter by negotiation ID"
+                },
+                {
+                  "key": "select",
+                  "value": "*"
+                }
+              ]
+            },
+            "description": "## Get Single Negotiation\n\nRetrieves a specific negotiation record by UUID.\n\n### Path/Query Parameters\n- `id=eq.{uuid}` - Exact match on ID (uses saved negotiation_id)\n\n### Response\nReturns array with single negotiation object (empty if not found)."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Negotiation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Negotiation updated\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData[0]).to.have.property('id');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved-status-uuid\",\n  \"cons_note\": \"Updated notes - negotiation approved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.negotiation__details?id=eq.{{negotiation_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.negotiation__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{negotiation_id}}"
+                }
+              ]
+            },
+            "description": "## Update Negotiation\n\nUpdates an existing negotiation record. Only sends fields to update (partial update).\n\n### Updateable Fields\n- `state`: Change negotiation state\n- `status`: Change approval status\n- `tipo_lead`: Update lead type\n- `operazione`: Change operation type\n- `operazione_subcategory`: Update operation subcategory\n- `cons_note`: Update consultant notes\n\n### Non-Updateable Fields\nThese are immutable after creation:\n- `id`: Primary key\n- `opened_by`: Original user who opened\n- `created_at`: Creation timestamp\n\n### Partial Updates\nPATCH allows updating only specific fields. Other fields remain unchanged.\n\n### Response\nWith `Prefer: return=representation` header, returns updated record.\n\n### Error Responses\n- **400**: Invalid data format\n- **401**: Unauthorized\n- **403**: Forbidden (RLS policy)\n- **404**: Negotiation not found"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Negotiation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "console.log(\"✅ Negotiation deleted\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.negotiation__details?id=eq.{{negotiation_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.negotiation__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{negotiation_id}}"
+                }
+              ]
+            },
+            "description": "## Delete Negotiation\n\nDeletes a negotiation record. **Warning: This is permanent and cannot be undone.**\n\n### Cascade Behavior\nDeleting a negotiation will cascade-delete related records:\n- supply_point__gas records referencing this negotiation\n- supply_point__electric records referencing this negotiation\n- document__details records referencing this negotiation\n\n### Response\n- Success: HTTP 204 No Content (empty body)\n- No match: HTTP 204 (same even if ID doesn't exist)\n\n### Warning\nDeletion is permanent. Consider soft deletes (updating status) for production.\n\n### Error Responses\n- **401**: Unauthorized\n- **403**: Forbidden (RLS policy)\n- **409**: Conflict (foreign key constraint - only if cascade not configured)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Supply Points",
+      "description": "CRUD operations for supply point locations (addresses and service locations)",
+      "item": [
+        {
+          "name": "Create Supply Point",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Supply point created\", function () {",
+                  "    pm.expect(jsonData[0]).to.have.property('id');",
+                  "    pm.collectionVariables.set(\"supply_point_id\", jsonData[0].id);",
+                  "});",
+                  "",
+                  "pm.test(\"Location data present\", function () {",
+                  "    pm.expect(jsonData[0].product_type).to.exist;",
+                  "    pm.expect(jsonData[0].active).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"supp_address_1\": \"Via Roma 123\",\n  \"supp_address_2\": \"Apartment 5\",\n  \"supp_zip\": 20100,\n  \"supp_town\": \"Milano\",\n  \"supp_pr\": \"MI\",\n  \"product_type\": \"product-settore-uuid\",\n  \"active\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__details",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__details"]
+            },
+            "description": "## Create Supply Point\n\nCreates a new supply point (service location/address).\n\n### Required Fields\n- `product_type`: UUID reference to product__settore (electricity, gas, telecom, etc.)\n\n### Optional Fields\n- `supp_address_1`: Street address (primary)\n- `supp_address_2`: Street address (secondary/apartment number)\n- `supp_zip`: Postal code (5 digits in Italy)\n- `supp_town`: City/Town name\n- `supp_pr`: Province (2-letter code: MI, TO, RM, etc.)\n- `active`: Boolean (default: true) - indicates if supply point is active\n\n### Response\nReturns created supply point with auto-generated ID and timestamp.\n\n### Business Logic\n- `created_at` auto-set to current timestamp\n- `active` defaults to true (can be disabled later)\n- No address validation - accepts any string format\n\n### Error Responses\n- **400**: Missing product_type or invalid UUID format\n- **401**: Unauthorized\n- **403**: Forbidden (RLS policy)\n- **409**: Foreign key constraint violation"
+          },
+          "response": [
+            {
+              "name": "Success - Supply Point Created",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"supp_address_1\": \"Via Roma 123\",\n  \"supp_town\": \"Milano\",\n  \"supp_pr\": \"MI\",\n  \"product_type\": \"product-uuid\"\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/rest/v1/bms.supply_point__details"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"supp_address_1\": \"Via Roma 123\",\n    \"supp_address_2\": \"Apartment 5\",\n    \"supp_zip\": 20100,\n    \"supp_town\": \"Milano\",\n    \"supp_pr\": \"MI\",\n    \"product_type\": \"product-uuid\",\n    \"created_at\": 1715001000000,\n    \"active\": true\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get All Supply Points",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__details?select=*&order=created_at.desc",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__details"],
+              "query": [
+                {
+                  "key": "select",
+                  "value": "*"
+                },
+                {
+                  "key": "order",
+                  "value": "created_at.desc"
+                },
+                {
+                  "key": "active",
+                  "value": "eq.true",
+                  "description": "Filter to active supply points only",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "## Get All Supply Points\n\nRetrieves all supply point records.\n\n### Query Parameters\n\n**Filtering:**\n- `active=eq.true` - Only active locations\n- `supp_town=eq.Milano` - Filter by city\n- `supp_pr=eq.MI` - Filter by province\n- `product_type=eq.electricity-uuid` - Filter by type\n\n**Sorting:**\n- `order=created_at.desc` - Newest first\n- `order=supp_town.asc` - Sort by city\n\n### Response\nReturns array of supply point objects."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Supply Point",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"active\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__details?id=eq.{{supply_point_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{supply_point_id}}"
+                }
+              ]
+            },
+            "description": "## Update Supply Point\n\nUpdates supply point details (address, status, etc)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Supply Point",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__details?id=eq.{{supply_point_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{supply_point_id}}"
+                }
+              ]
+            },
+            "description": "## Delete Supply Point\n\n⚠️ **Cascade Delete Warning:** Deleting a supply point will delete all related electricity and gas service records."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Electricity Services",
+      "description": "CRUD operations for electricity supply point details (POD, consumption, pricing)",
+      "item": [
+        {
+          "name": "Create Electricity Service",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Electricity service created\", function () {",
+                  "    pm.expect(jsonData[0]).to.have.property('id');",
+                  "    pm.expect(jsonData[0].pod).to.exist;",
+                  "    pm.collectionVariables.set(\"electric_id\", jsonData[0].id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"negotiation\": \"{{negotiation_id}}\",\n  \"supply_point\": \"{{supply_point_id}}\",\n  \"pod\": \"IT001E12345678901234567890\",\n  \"offer_type\": \"offer-type-uuid\",\n  \"uso_forn\": \"usage-category-uuid\",\n  \"supplier\": \"Enel Energia\",\n  \"DL\": \"Distributor Code\",\n  \"pricing_type\": \"pricing-type-uuid\",\n  \"vendita_ee_quota_consumi_eur\": 0.150,\n  \"vendita_ee_quota_fissa_eur\": 45.50,\n  \"per_tot\": 0.175,\n  \"per_F1\": 0.160,\n  \"per_F2\": 0.155,\n  \"per_F23\": 0.155,\n  \"per_F3\": 0.140,\n  \"volume\": 2500.50,\n  \"potenza\": 4.5,\n  \"tensione\": 230.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__electric",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__electric"]
+            },
+            "description": "## Create Electricity Service Details\n\nCreates electricity-specific supply point information (POD, consumption, pricing).\n\n### Required Fields\n- `negotiation`: UUID reference to negotiation__details\n\n### Optional Fields\n\n**Identifiers:**\n- `supply_point`: UUID reference to supply_point__details\n- `pod`: Point of Delivery code (Italian electricity identifier)\n- `supplier`: Supplier company name\n- `DL`: Distributor code/name\n\n**Service Details:**\n- `offer_type`: UUID reference to product__offer_types\n- `uso_forn`: UUID reference to product__usage_categories (usage type)\n- `pricing_type`: UUID reference to product__pricing_types\n\n**Pricing (€/kWh or fixed):**\n- `vendita_ee_quota_consumi_eur`: Variable consumption rate (€/kWh)\n- `vendita_ee_quota_fissa_eur`: Fixed rate (€/month)\n- `per_tot`: Total per unit (blended rate)\n- `per_F1`: F1 band rate (peak hours)\n- `per_F2`: F2 band rate (medium load)\n- `per_F23`: F23 band rate (combined)\n- `per_F3`: F3 band rate (off-peak)\n\n**Consumption/Technical:**\n- `volume`: Annual consumption (kWh)\n- `potenza`: Contracted power (kW)\n- `tensione`: Voltage level (V)\n\n### Italian Electricity Details\n- **POD**: 33-digit unique identifier for delivery point\n- **F-Bands**: Italian time-of-use tariff structure (F1=peak, F2=medium, F3=off-peak)\n- **Distributors**: Local grid operators (Enel, Acea, etc.)\n\n### Response\nReturns created electricity service record."
+          },
+          "response": [
+            {
+              "name": "Success - Electricity Created",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"negotiation\": \"negotiation-uuid\",\n  \"pod\": \"IT001E12345678901234567890\",\n  \"supplier\": \"Enel\",\n  \"volume\": 2500.50\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/rest/v1/bms.supply_point__electric"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440002\",\n    \"negotiation\": \"negotiation-uuid\",\n    \"supply_point\": \"supply-uuid\",\n    \"pod\": \"IT001E12345678901234567890\",\n    \"supplier\": \"Enel Energia\",\n    \"DL\": \"Distributor Code\",\n    \"volume\": 2500.50,\n    \"potenza\": 4.5,\n    \"per_tot\": 0.175,\n    \"per_F1\": 0.160,\n    \"per_F2\": 0.155,\n    \"per_F3\": 0.140\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get All Electricity Services",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__electric?select=*&order=created_at.desc",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__electric"],
+              "query": [
+                {
+                  "key": "select",
+                  "value": "*"
+                },
+                {
+                  "key": "order",
+                  "value": "created_at.desc"
+                },
+                {
+                  "key": "negotiation",
+                  "value": "eq.{{negotiation_id}}",
+                  "description": "Filter by negotiation",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "## Get All Electricity Services\n\nRetrieves all electricity supply records.\n\n### Query Parameters\n- `negotiation=eq.{uuid}` - Filter by specific negotiation\n- `supplier=eq.Enel` - Filter by supplier\n- `pod=eq.IT001E...` - Filter by POD code"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Electricity Service",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"per_tot\": 0.180\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__electric?id=eq.{{electric_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__electric"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{electric_id}}"
+                }
+              ]
+            },
+            "description": "## Update Electricity Service\n\nUpdates pricing, consumption, or technical details."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Electricity Service",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__electric?id=eq.{{electric_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__electric"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{electric_id}}"
+                }
+              ]
+            },
+            "description": "## Delete Electricity Service\n\nDeletes an electricity service record."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Gas Services",
+      "description": "CRUD operations for gas supply point details (PDR, consumption, usage)",
+      "item": [
+        {
+          "name": "Create Gas Service",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Gas service created\", function () {",
+                  "    pm.expect(jsonData[0]).to.have.property('id');",
+                  "    pm.expect(jsonData[0].pdr).to.exist;",
+                  "    pm.collectionVariables.set(\"gas_id\", jsonData[0].id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"negotiation\": \"{{negotiation_id}}\",\n  \"supply_point\": \"{{supply_point_id}}\",\n  \"pdr\": \"IT002E98765432109876543210\",\n  \"offer_type\": \"offer-type-uuid\",\n  \"uso_forn\": \"usage-category-uuid\",\n  \"supplier\": \"Eni Gas\",\n  \"DL\": \"Distributor Code\",\n  \"volume\": 15000.50,\n  \"gas_matr\": \"GA123456\",\n  \"gas_remi\": \"RE123456\",\n  \"accise\": false,\n  \"ateco_cod\": \"41.20\",\n  \"ateco_descr\": \"Construction activities\",\n  \"consumption_quota_charge\": 0.055,\n  \"fixed_fee_charge\": 85.00,\n  \"per_tot\": 0.065\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__gas",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__gas"]
+            },
+            "description": "## Create Gas Service Details\n\nCreates gas-specific supply point information (PDR, consumption, usage category).\n\n### Required Fields\n- `negotiation`: UUID reference to negotiation__details\n\n### Optional Fields\n\n**Identifiers:**\n- `supply_point`: UUID reference to supply_point__details\n- `pdr`: Point of Delivery and Redelivery code (Italian gas identifier)\n- `supplier`: Gas supplier company name\n- `DL`: Distributor code/name\n\n**Service Details:**\n- `offer_type`: UUID reference to product__offer_types\n- `uso_forn`: UUID reference to product__usage_categories (usage classification)\n- `accises`: Boolean - whether excise tax is applied\n\n**Business Classification (ATECO):**\n- `ateco_cod`: ATECO code (Italian business classification)\n- `ateco_descr`: Description of business activity\n\n**Pricing (€/SMC or fixed):**\n- `consumption_quota_charge`: Variable rate per unit (€/SMC)\n- `fixed_fee_charge`: Fixed monthly charge (€)\n- `per_tot`: Total blended rate\n\n**Consumption/Technical:**\n- `volume`: Annual consumption (SMC - standard cubic meters)\n- `gas_matr`: Gas meter matriculation number\n- `gas_remi`: Gas remote reading/meter ID\n\n### Italian Gas Details\n- **PDR**: 14-digit code for gas delivery point\n- **SMC**: Standard Cubic Meters (1 SMC = 1 m³ at standard conditions)\n- **ATECO**: Italian National Institute classification code\n\n### Response\nReturns created gas service record."
+          },
+          "response": [
+            {
+              "name": "Success - Gas Service Created",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"negotiation\": \"negotiation-uuid\",\n  \"pdr\": \"IT002E98765432109876543210\",\n  \"supplier\": \"Eni Gas\",\n  \"volume\": 15000.50\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/rest/v1/bms.supply_point__gas"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"negotiation\": \"negotiation-uuid\",\n    \"supply_point\": \"supply-uuid\",\n    \"pdr\": \"IT002E98765432109876543210\",\n    \"supplier\": \"Eni Gas\",\n    \"volume\": 15000.50,\n    \"consumption_quota_charge\": 0.055,\n    \"fixed_fee_charge\": 85.00,\n    \"per_tot\": 0.065\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get All Gas Services",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__gas?select=*&order=created_at.desc",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__gas"],
+              "query": [
+                {
+                  "key": "select",
+                  "value": "*"
+                },
+                {
+                  "key": "order",
+                  "value": "created_at.desc"
+                }
+              ]
+            },
+            "description": "## Get All Gas Services\n\nRetrieves all gas supply records."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Gas Service",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"volume\": 16000.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__gas?id=eq.{{gas_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__gas"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{gas_id}}"
+                }
+              ]
+            },
+            "description": "## Update Gas Service\n\nUpdates consumption, pricing, or other details."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Gas Service",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.supply_point__gas?id=eq.{{gas_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.supply_point__gas"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{gas_id}}"
+                }
+              ]
+            },
+            "description": "## Delete Gas Service\n\nDeletes a gas service record."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "description": "CRUD operations for documents (invoices, contracts, agreements)",
+      "item": [
+        {
+          "name": "Create Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "pm.test(\"Document created\", function () {",
+                  "    pm.expect(jsonData[0]).to.have.property('id');",
+                  "    pm.collectionVariables.set(\"document_id\", jsonData[0].id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"negotiation\": \"{{negotiation_id}}\",\n  \"customer\": \"customer-uuid-from-crm\",\n  \"type\": \"document-type-uuid\",\n  \"file_path\": \"/documents/invoices/2026/INVOICE_2026_05_001.pdf\",\n  \"periodo_fatturazione\": 1714521600000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.document__details",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.document__details"]
+            },
+            "description": "## Create Document\n\nCreates a document record (invoice, contract, agreement, etc.).\n\n### Required Fields\n- `negotiation`: UUID reference to negotiation__details\n- `customer`: UUID reference to crm.people__details (document owner/customer)\n\n### Optional Fields\n- `type`: UUID reference to document__types (invoice, contract, ID, etc.)\n- `file_path`: Path to stored file (e.g., S3 bucket path, local storage path)\n- `periodo_fatturazione`: Billing period date (milliseconds since epoch)\n\n### Cross-Schema Reference\n- `customer` field references CRM schema (crm.people__details)\n- Enables linking billing documents to customer master records\n\n### Response\nReturns created document with auto-generated ID and upload timestamp.\n\n### Document Types\nCommon document_types:\n- Invoice (fattura)\n- Contract (contratto)\n- ID Document (documento identità)\n- Agreement (accordo)\n- Quote (preventivo)\n\n### Error Responses\n- **400**: Missing required fields\n- **401**: Unauthorized\n- **403**: Forbidden (RLS policy)\n- **409**: Foreign key constraint violation"
+          },
+          "response": [
+            {
+              "name": "Success - Document Created",
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"negotiation\": \"negotiation-uuid\",\n  \"customer\": \"customer-uuid\",\n  \"type\": \"invoice-type-uuid\",\n  \"file_path\": \"/invoices/invoice_001.pdf\"\n}"
+                },
+                "url": {
+                  "raw": "{{supabase_url}}/rest/v1/bms.document__details"
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "body": "[\n  {\n    \"id\": \"550e8400-e29b-41d4-a716-446655440004\",\n    \"negotiation\": \"negotiation-uuid\",\n    \"customer\": \"customer-uuid\",\n    \"type\": \"invoice-type-uuid\",\n    \"file_path\": \"/documents/invoices/2026/INVOICE_2026_05_001.pdf\",\n    \"periodo_fatturazione\": 1714521600000,\n    \"uploaded_at\": 1715001000000\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get All Documents",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Returns array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.document__details?select=*&order=uploaded_at.desc",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.document__details"],
+              "query": [
+                {
+                  "key": "select",
+                  "value": "*"
+                },
+                {
+                  "key": "order",
+                  "value": "uploaded_at.desc"
+                },
+                {
+                  "key": "negotiation",
+                  "value": "eq.{{negotiation_id}}",
+                  "description": "Filter by negotiation",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "## Get All Documents\n\nRetrieves all document records.\n\n### Query Parameters\n- `negotiation=eq.{uuid}` - Filter by negotiation\n- `customer=eq.{uuid}` - Filter by customer\n- `type=eq.{uuid}` - Filter by document type\n- `order=uploaded_at.desc` - Sort by upload date (newest first)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Document by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.document__details?id=eq.{{document_id}}&select=*",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.document__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{document_id}}"
+                },
+                {
+                  "key": "select",
+                  "value": "*"
+                }
+              ]
+            },
+            "description": "## Get Single Document\n\nRetrieves a specific document by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Document",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              },
+              {
+                "key": "Prefer",
+                "value": "return=representation",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"file_path\": \"/documents/invoices/2026/INVOICE_2026_05_001_UPDATED.pdf\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.document__details?id=eq.{{document_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.document__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{document_id}}"
+                }
+              ]
+            },
+            "description": "## Update Document\n\nUpdates document metadata (file path, type, billing period)."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              },
+              {
+                "key": "apikey",
+                "value": "{{supabase_anon_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{supabase_url}}/rest/v1/bms.document__details?id=eq.{{document_id}}",
+              "host": ["{{supabase_url}}"],
+              "path": ["rest", "v1", "bms.document__details"],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "eq.{{document_id}}"
+                }
+              ]
+            },
+            "description": "## Delete Document\n\nDeletes a document record. Note: The file itself must be deleted separately from storage."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "supabase_url",
+      "value": "http://100.126.60.17:54321",
+      "type": "string",
+      "description": "Supabase API URL (localhost for development, production URL for live)"
+    },
+    {
+      "key": "supabase_anon_key",
+      "value": "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
+      "type": "string",
+      "description": "Supabase publishable key"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string",
+      "description": "JWT access token - auto-saved from SignIn"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string",
+      "description": "Current user ID - auto-saved from SignIn"
+    },
+    {
+      "key": "negotiation_id",
+      "value": "",
+      "type": "string",
+      "description": "Current negotiation ID - saved from Create Negotiation"
+    },
+    {
+      "key": "supply_point_id",
+      "value": "",
+      "type": "string",
+      "description": "Current supply point ID - saved from Create Supply Point"
+    },
+    {
+      "key": "electric_id",
+      "value": "",
+      "type": "string",
+      "description": "Current electricity service ID - saved from Create Electricity"
+    },
+    {
+      "key": "gas_id",
+      "value": "",
+      "type": "string",
+      "description": "Current gas service ID - saved from Create Gas Service"
+    },
+    {
+      "key": "document_id",
+      "value": "",
+      "type": "string",
+      "description": "Current document ID - saved from Create Document"
+    }
+  ]
+}
