@@ -7,5 +7,5 @@ SELECT
   r.id
 FROM "auth"."users" u
 CROSS JOIN "public"."permission__roles" r
-WHERE u."email" = 'roldofo@besides.com'
+WHERE u."email" = 'rodolfo@besides.com'
   AND r."name" = 'Consultant';
