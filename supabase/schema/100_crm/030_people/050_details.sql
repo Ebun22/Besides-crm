@@ -16,8 +16,7 @@ CREATE TABLE IF NOT EXISTS "crm"."people__details" (
   "tit_birthplace" text            NULL,
   "tit_birth_date" text            NULL,
   "tit_gender"     varchar(1)      NULL,
-  "cust_address_1" text            NULL,
-  "cust_address_2" text            NULL,
+  "cust_address"   text            NULL,
   "type"           uuid        NOT NULL,
   "status"         uuid            NULL,
   CONSTRAINT people__details_pkey         PRIMARY KEY ("id"),
@@ -86,9 +85,7 @@ FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
-  (
-    SELECT "public"."permission__action_authorize"('global.create') AS "permission__action_authorize"
-  )
+  true
 );
 
 -- Update RLS Policy
@@ -100,9 +97,7 @@ FOR UPDATE
 TO
   "authenticated"
 USING (
-  (
-    SELECT "public"."permission__action_authorize"('global.update') AS "permission__action_authorize"
-  )
+  true
 );
 
 -- Delete RLS Policy
@@ -114,9 +109,7 @@ FOR DELETE
 TO
   "authenticated"
 USING (
-  (
-    SELECT "public"."permission__action_authorize"('global.delete') AS "permission__action_authorize"
-  )
+  true
 );
 
 ALTER PUBLICATION "supabase_realtime" ADD TABLE ONLY "crm"."people__details";

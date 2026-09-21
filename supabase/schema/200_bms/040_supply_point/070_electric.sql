@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
   "id"                           uuid        NOT NULL DEFAULT gen_random_uuid (),
-  "negotiation"                  uuid        NOT NULL,
+  "negotiation"                  uuid            NULL,
   "supply_point"                 uuid            NULL,
   "pod"                          text            NULL,
   "offer_type"                   uuid            NULL,
@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__electric" (
   "potenza"                      numeric(8,3)    NULL,
   "tensione"                     numeric(8,3)    NULL,
   CONSTRAINT supply_point__electric_pkey              PRIMARY KEY ("id"),
+  CONSTRAINT supply_point__electric_pod_key           UNIQUE ("pod"),
   CONSTRAINT supply_point__electric_negotiation_fkey  FOREIGN KEY ("negotiation")
     REFERENCES "bms"."negotiation__details" ("id")
     ON UPDATE CASCADE
@@ -83,5 +84,15 @@ FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
+  true
+);
+
+CREATE POLICY "Enable auth users update"
+ON
+  "bms"."supply_point__electric"
+FOR UPDATE
+TO
+  "authenticated"
+USING (
   true
 );

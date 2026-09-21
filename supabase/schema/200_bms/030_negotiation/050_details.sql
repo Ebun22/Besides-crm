@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS "bms"."negotiation__details" (
     REFERENCES "bms"."negotiation__tipo_lead" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
-  CONSTRAINT negotiation__details_tipo_cliente_fkey FOREIGN KEY ("tipo_cliente")
-    REFERENCES "bms"."negotiation__tipo_cliente" ("id")
+  CONSTRAINT negotiation__details_tipo_cliente_fkey1 FOREIGN KEY ("tipo_cliente")
+    REFERENCES "crm"."people__types" ("id")
     ON UPDATE CASCADE
     ON DELETE CASCADE,
   CONSTRAINT negotiation__details_operazione_fkey   FOREIGN KEY ("operazione")
@@ -87,5 +87,15 @@ FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
+  true
+);
+
+CREATE POLICY "Enable auth users update"
+ON
+  "bms"."negotiation__details"
+FOR UPDATE
+TO
+  "authenticated"
+USING (
   true
 );

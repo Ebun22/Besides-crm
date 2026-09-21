@@ -1,9 +1,14 @@
 CREATE TABLE IF NOT EXISTS "bms"."product__operazione" (
-  "id"          uuid    NOT NULL DEFAULT gen_random_uuid (),
-  "name"        text    NOT NULL,
-  "subcategory" boolean NOT NULL DEFAULT FALSE,
-  "description" text        NULL,
-  CONSTRAINT product__operazione_pkey PRIMARY KEY ("id")
+  "id"             uuid    NOT NULL DEFAULT gen_random_uuid (),
+  "name"           text    NOT NULL,
+  "subcategory"    boolean NOT NULL DEFAULT FALSE,
+  "description"    text        NULL,
+  "service_sector" uuid        NULL,
+  CONSTRAINT product__operazione_pkey                PRIMARY KEY ("id"),
+  CONSTRAINT product__operazione_service_sector_fkey FOREIGN KEY ("service_sector")
+    REFERENCES "bms"."product__settore" ("id")
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 ALTER TABLE "bms"."product__operazione" ENABLE ROW LEVEL SECURITY;
