@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "bms"."document__details" (
   "file_path"             text     NULL,
   "type"                  uuid     NULL,
   "periodo_fatturazione"  bigint   NULL,
-  "negotiation"           uuid NOT NULL,
+  "negotiation"           uuid     NULL,
   "customer"              uuid NOT NULL,
   "uploaded_at"           bigint   NULL DEFAULT (EXTRACT(EPOCH FROM now()) * 1000)::BIGINT,
   CONSTRAINT document__details_pkey      PRIMARY KEY ("id"),
@@ -71,6 +71,17 @@ FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
+  true
+);
+
+CREATE POLICY
+  "Enable update for auth users"
+ON
+  "bms"."document__details"
+FOR UPDATE
+TO
+  "authenticated"
+USING (
   true
 );
 

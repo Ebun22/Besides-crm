@@ -51,3 +51,13 @@ TO
 WITH CHECK (
   true
 );
+
+CREATE POLICY "Enable update for auth users"
+ON
+  "bms"."telecom__details"
+FOR UPDATE
+TO
+  "authenticated"
+USING (
+  true
+);

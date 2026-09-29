@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "bms"."supply_point__gas" (
   "id"                       uuid        NOT NULL DEFAULT gen_random_uuid (),
-  "negotiation"              uuid        NOT NULL,
+  "negotiation"              uuid            NULL,
   "supply_point"             uuid            NULL,
   "pdr"                      text            NULL,
   "offer_type"               uuid            NULL,
@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS "bms"."supply_point__gas" (
   "fixed_fee_charge"         numeric(8,2)    NULL,
   "per_tot"                  numeric(8,2)    NULL,
   CONSTRAINT supply_point__gas_pkey             PRIMARY KEY ("id"),
+  CONSTRAINT supply_point__gas_pdr_key          UNIQUE ("pdr"),
   CONSTRAINT supply_point__gas_negotiation_fkey FOREIGN KEY ("negotiation")
     REFERENCES "bms"."negotiation__details" ("id")
     ON UPDATE CASCADE
@@ -77,5 +78,15 @@ FOR INSERT
 TO
   "authenticated"
 WITH CHECK (
+  true
+);
+
+CREATE POLICY "Enable auth users update"
+ON
+  "bms"."supply_point__gas"
+FOR UPDATE
+TO
+  "authenticated"
+USING (
   true
 );

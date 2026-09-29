@@ -6,6 +6,10 @@ CREATE TABLE IF NOT EXISTS "bms"."product__customer" (
   CONSTRAINT product__customer_customer_fkey FOREIGN KEY ("customer")
     REFERENCES "crm"."people__details" ("id")
     ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  CONSTRAINT product__customer_product_fkey  FOREIGN KEY ("product")
+    REFERENCES "bms"."supply_point__details" ("id")
+    ON UPDATE CASCADE
     ON DELETE CASCADE
 );
 
